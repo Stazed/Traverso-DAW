@@ -158,8 +158,9 @@ private:
 	struct PeakHeaderData {
 		int headerSize;
 		int normValuesDataOffset;
-		int peakDataOffsets[ZOOM_LEVELS - SAVING_ZOOM_FACTOR];
-		int peakDataSizeForLevel[ZOOM_LEVELS - SAVING_ZOOM_FACTOR];
+                
+		int peakDataOffsets[ZOOM_LEVELS - SAVING_ZOOM_FACTOR + 1];
+		int peakDataSizeForLevel[ZOOM_LEVELS - SAVING_ZOOM_FACTOR + 1];
 		char label[6];	//TPFxxx -> Traverso Peak File version x.x.x
 		int version[2];
 	};

@@ -155,7 +155,7 @@ int Peak::read_header()
                 (data->headerdata.label[5]!='F') ||
                 (data->headerdata.version[0] != PEAKFILE_MAJOR_VERSION) ||
                 (data->headerdata.version[1] != PEAKFILE_MINOR_VERSION)) {
-            printf("This file either isn't a Traverso Peak file, or the version doesn't match!\n");
+            printf("This file either isn't a Traverso Peak file, or the version doesn't match! = %s\n", QS_C(data->fileName) );
             data->file.close();
             return -1;
         }
@@ -423,7 +423,12 @@ int Peak::finish_processing()
         data->headerdata.peakDataSizeForLevel[0] = data->pd->processBufferSize;
         totalBufferSize += data->pd->processBufferSize;
 
-        for( int i = SAVING_ZOOM_FACTOR + 1; i < ZOOM_LEVELS+1; ++i) {
+        for( int i = SAVING_ZOOM_FACTOR + 1; i < ZOOM_LEVELS +1; ++i)
+        {
+            // warning: iteration 13 invokes undefined behavior [-Waggressive-loop-optimizations]
+            // SAVING_ZOOM_FACTOR = 8
+            // ZOOM_LEVELS = 22
+            // peakDataSizeForLevel[ZOOM_LEVELS - SAVING_ZOOM_FACTOR] = 14 --- fixed by increasing array size by 1
             data->headerdata.peakDataSizeForLevel[i - SAVING_ZOOM_FACTOR] = data->headerdata.peakDataSizeForLevel[i - SAVING_ZOOM_FACTOR - 1] / 2;
             totalBufferSize += data->headerdata.peakDataSizeForLevel[i - SAVING_ZOOM_FACTOR];
         }
@@ -448,8 +453,12 @@ int Peak::finish_processing()
         data->headerdata.peakDataSizeForLevel[0] = data->pd->processBufferSize;
         data->headerdata.peakDataOffsets[0] = 0;
 
-        for (int i = SAVING_ZOOM_FACTOR+1; i < ZOOM_LEVELS+1; ++i) {
-
+        for (int i = SAVING_ZOOM_FACTOR + 1; i < ZOOM_LEVELS + 1; ++i)
+        {
+            // warning: iteration 13 invokes undefined behavior [-Waggressive-loop-optimizations]
+            // SAVING_ZOOM_FACTOR = 8
+            // ZOOM_LEVELS = 22
+            // peakDataOffsets[ZOOM_LEVELS - SAVING_ZOOM_FACTOR] = 14 --- fixed by increasing array size by 1
             int prevLevelSize = data->headerdata.peakDataSizeForLevel[i - SAVING_ZOOM_FACTOR - 1];
             data->headerdata.peakDataOffsets[i - SAVING_ZOOM_FACTOR] = data->headerdata.peakDataOffsets[i - SAVING_ZOOM_FACTOR - 1] + prevLevelSize;
             prevLevelBufferPos = data->headerdata.peakDataOffsets[i - SAVING_ZOOM_FACTOR - 1];
