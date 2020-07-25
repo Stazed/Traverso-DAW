@@ -367,20 +367,42 @@ int Project::load(const QString& projectfile)
 
         // Lets see if there is already a Project Master out jack bus:
         // if not, create one, the user expects at least that Master shows up in the patchbay!
-        if (audiodevice().get_driver_type() == "Jack") {
-                AudioBus* bus = m_softwareAudioBuses.value(MASTER_OUT_SOFTWARE_BUS_ID);
-                if (!bus) {
-                        BusConfig conf;
-                        conf.name = "jackmaster";
-                        conf.channelNames << "jackmaster_0" << "jackmaster_1";
-                        conf.type = "output";
-                        conf.bustype = "software";
-                        conf.id = MASTER_OUT_SOFTWARE_BUS_ID;
-                        bus = create_software_audio_bus(conf);
+        if (audiodevice().get_driver_type() == "Jack")
+        {
+            AudioBus* bus = m_softwareAudioBuses.value(MASTER_OUT_SOFTWARE_BUS_ID);
 
-                        m_masterOutBusTrack->add_post_send(MASTER_OUT_SOFTWARE_BUS_ID);
+            /* Set up default jack master channels */
+            BusConfig conf;
+            conf.name = "jackmaster";
+            conf.channelNames << "jackmaster_0" << "jackmaster_1";
+            conf.type = "output";
+            conf.bustype = "software";
+            conf.id = MASTER_OUT_SOFTWARE_BUS_ID;
 
+            if (!bus)   // do not have a bus so create everything
+            {
+                bus = create_software_audio_bus(conf);
+                m_masterOutBusTrack->add_post_send(MASTER_OUT_SOFTWARE_BUS_ID);
+            }
+            else
+            {
+                // If the bus exists, but no channels, then create the jack channels
+                QStringList Qlist = bus->get_channel_names();
+                if(!Qlist.size())   // means no channels
+                {
+                    AudioChannel* channel;
+                    for (int i=0; i< conf.channelNames.size(); ++i)
+                    {
+                        channel = new AudioChannel(conf.channelNames.at(i), i, bus->get_type());
+                        channel->set_buffer_size(audiodevice().get_buffer_size());
+
+                        audiodevice().add_jack_channel(channel);
+                        bus->add_channel(channel);
+
+                        m_softwareAudioChannels.insert(channel->get_id(), channel);
+                    }
                 }
+            }
         }
 
         QDomNode busTracksNode = docElem.firstChildElement("BusTracks");

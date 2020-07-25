@@ -555,6 +555,10 @@ bool Track::connect_to_jack(bool inports, bool outports)
                 bus = project->create_software_audio_bus(busconfig);
                 add_post_send(bus);
         }
+        
+        // Gotta clear the output names since the for() loop appends the names and will add
+        // them to the input bus
+        busconfig.channelNames.clear();
 
         if (inports) {
                 for (int chan=0; chan<m_channelCount; ++chan) {
