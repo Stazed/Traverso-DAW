@@ -138,7 +138,7 @@ nframes_t VorbisAudioReader::read_private(DecodeBuffer* buffer, nframes_t frameC
 			break;
 		}
 		
-		for (int c=0; c < m_channels; c++) {
+		for (unsigned c=0; c < m_channels; c++) {
 			memcpy(buffer->destination[c] + totalFramesRead, tmp[c], framesRead * sizeof(audio_sample_t));
 		}
 		totalFramesRead += framesRead;

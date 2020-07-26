@@ -419,7 +419,7 @@ int ReadSource::rb_read(audio_sample_t** dst, TimeRef& start, nframes_t count)
 
 	nframes_t readcount = 0;
 	
-	for (int chan=0; chan<m_channelCount; ++chan) {
+	for (unsigned chan=0; chan<m_channelCount; ++chan) {
 		
 		readcount = m_buffers.at(chan)->read(dst[chan], count);
 
@@ -626,7 +626,7 @@ void ReadSource::prepare_rt_buffers( )
         // have chunck sizes that are multiples of 4KB ?
         m_chunkSize = m_bufferSize / DiskIO::bufferdividefactor;
 
-	for (int i=0; i<m_channelCount; ++i) {
+	for (unsigned i=0; i<m_channelCount; ++i) {
 		m_buffers.append(new RingBufferNPT<float>(m_bufferSize));
 	}
 

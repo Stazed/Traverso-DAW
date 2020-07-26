@@ -206,7 +206,7 @@ void FadeCurve::process(AudioBus *bus, nframes_t nframes)
                         mix_pos = TimeRef();
 //                        printf("offset %d\n", offset);
 
-                        for (int chan=0; chan<bus->get_channel_count(); ++chan) {
+                        for (unsigned chan=0; chan<bus->get_channel_count(); ++chan) {
                                 audio_sample_t* buf = bus->get_buffer(chan, framesToProcess);
                                 mixdown[chan] = buf + offset;
                         }
@@ -214,7 +214,7 @@ void FadeCurve::process(AudioBus *bus, nframes_t nframes)
                 } else {
                         mix_pos = (transportLocation - trackStartLocation);
 
-                        for (int chan=0; chan<bus->get_channel_count(); ++chan) {
+                        for (unsigned chan=0; chan<bus->get_channel_count(); ++chan) {
                                 mixdown[chan] = bus->get_buffer(chan, framesToProcess);
                         }
                 }
@@ -234,7 +234,7 @@ void FadeCurve::process(AudioBus *bus, nframes_t nframes)
 
         get_vector(mix_pos.universal_frame(), upperRange.universal_frame(), m_session->gainbuffer, framesToProcess);
 
-        for (int chan=0; chan<bus->get_channel_count(); ++chan) {
+        for (unsigned chan=0; chan<bus->get_channel_count(); ++chan) {
                 for (nframes_t frame = 0; frame < framesToProcess; ++frame) {
                         mixdown[chan][frame] *= m_session->gainbuffer[frame];
                 }

@@ -199,7 +199,7 @@ private:
 	snd_pcm_format_t              playback_sample_format;
 	snd_pcm_format_t              capture_sample_format;
 	float                         max_sample_val{};
-    int                          user_nperiods{};
+        unsigned int                  user_nperiods{};
 	unsigned int                  playback_nperiods{};
 	unsigned int                  capture_nperiods{};
 	unsigned long                 last_mask{};

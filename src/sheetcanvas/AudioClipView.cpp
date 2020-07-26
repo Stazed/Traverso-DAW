@@ -301,7 +301,7 @@ void AudioClipView::draw_peaks(QPainter* p, qreal xstart, int pixelcount)
 
     // Load peak data, mix curvedata and start painting it
     // if no peakdata is returned for a certain Peak object, schedule it for loading.
-    for (int chan=0; chan < channels; ++chan) {
+    for (unsigned chan=0; chan < channels; ++chan) {
 
         int availpeaks = peak->calculate_peaks(
                     chan,

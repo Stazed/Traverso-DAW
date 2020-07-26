@@ -478,7 +478,7 @@ void WriteSource::prepare_rt_buffers( )
 {
 	m_bufferSize = m_sampleRate * DiskIO::writebuffertime;
 	m_chunkSize = m_bufferSize / DiskIO::bufferdividefactor;
-	for (int i=0; i<m_channelCount; ++i) {
+	for (unsigned i=0; i<m_channelCount; ++i) {
 		m_buffers.append(new RingBufferNPT<audio_sample_t>(m_bufferSize));
 	}
 }

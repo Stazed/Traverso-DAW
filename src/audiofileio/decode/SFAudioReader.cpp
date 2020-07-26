@@ -136,7 +136,7 @@ nframes_t SFAudioReader::read_private(DecodeBuffer* buffer, nframes_t frameCount
 			break;	
 		default:
 			for (int f = 0; f < framesRead; f++) {
-				for (int c = 0; c < m_channels; c++) {
+				for (unsigned c = 0; c < m_channels; c++) {
 					buffer->destination[c][f] = buffer->readBuffer[f * m_channels + c];
 				}
 			}
