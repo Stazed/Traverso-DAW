@@ -475,6 +475,7 @@ MadAudioReader::~MadAudioReader()
     if (d) {
         d->handle->cleanup();
         delete d->handle;
+        d->handle = nullptr;
         clear_buffers();
         delete d;
     }
