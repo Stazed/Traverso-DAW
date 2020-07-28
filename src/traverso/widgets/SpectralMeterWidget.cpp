@@ -492,7 +492,11 @@ TCommand* SpectralMeterView::screen_capture( )
         QPainter painter(&image);
         m_widget->render(&painter);
 	
-	QString fn = QFileDialog::getSaveFileName (0, tr("Screen Capture file name"), QDir::homePath());
+	QString fn = QFileDialog::getSaveFileName (0, tr("Screen Capture file name"),
+                QDir::homePath(),
+                "",
+                0,
+                QFileDialog::DontUseNativeDialog);
 	
 	// if aborted exit here
 	if (fn.isEmpty()) {
@@ -541,7 +545,11 @@ TCommand* SpectralMeterView::export_average_curve()
 		return 0;
 	}
 
-	QString fn = QFileDialog::getSaveFileName (0, tr("Export average dB curve"), m_project->get_root_dir());
+	QString fn = QFileDialog::getSaveFileName (0, tr("Export average dB curve"),
+                m_project->get_root_dir(),
+                "",
+                0,
+                QFileDialog::DontUseNativeDialog);
 
 	// if aborted exit here
 	if (fn.isEmpty()) {

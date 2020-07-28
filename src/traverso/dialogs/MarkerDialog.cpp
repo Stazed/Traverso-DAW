@@ -456,7 +456,11 @@ void MarkerDialog::remove_marker()
 
 void MarkerDialog::export_toc()
 {
-	QString fn = QFileDialog::getSaveFileName (0, tr("Export Table of Contents"), m_project->get_root_dir(), tr("HTML File (*.html)"));
+	QString fn = QFileDialog::getSaveFileName (0, tr("Export Table of Contents"),
+                m_project->get_root_dir(),
+                tr("HTML File (*.html)"),
+                0,
+                QFileDialog::DontUseNativeDialog);
 
 	// if aborted exit here
 	if (fn.isEmpty()) {
