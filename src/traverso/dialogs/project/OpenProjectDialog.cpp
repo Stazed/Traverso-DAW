@@ -245,7 +245,9 @@ void OpenProjectDialog::on_projectDirSelectButton_clicked( )
 	rootDir.cdUp();
 	
 	QString newPath = QFileDialog::getExistingDirectory(this,
-			tr("Choose an existing or create a new Project Directory"), rootDir.canonicalPath());
+			tr("Choose an existing or create a new Project Directory"),
+                        rootDir.canonicalPath(),
+                        QFileDialog::DontUseNativeDialog);
 			
 	if (newPath.isEmpty() || newPath.isNull()) {
 		return;

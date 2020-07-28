@@ -100,7 +100,8 @@ int Import::prepare_actions()
 				tr("Import audio source"),
                                 pm().get_project()->get_import_dir(),
 				allFiles + ";;" + activeFilter,
-				&activeFilter);
+				&activeFilter,
+                                QFileDialog::DontUseNativeDialog);
 		
 		int splitpoint = m_fileName.lastIndexOf("/") + 1;
 		QString dir = m_fileName.left(splitpoint - 1);

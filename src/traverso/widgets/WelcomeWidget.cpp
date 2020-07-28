@@ -149,7 +149,9 @@ void WelcomeWidget::on_changeProjectsDirButton_clicked()
 {
         QString path = pm().get_projects_directory();
         QString newPath = QFileDialog::getExistingDirectory(this,
-                        tr("Choose an existing or create a new Project Directory"), path);
+                        tr("Choose an existing or create a new Project Directory"),
+                        path,
+                        QFileDialog::DontUseNativeDialog);
 
         if (newPath.isEmpty() || newPath.isNull()) {
                 return;

@@ -228,7 +228,9 @@ void NewProjectDialog::add_files()
 
 	QStringList list = QFileDialog::getOpenFileNames(this, tr("Open Audio Files"),
                         importdir,
-                        tr("Audio files (*.wav *.flac *.ogg *.mp3 *.wv *.w64)"));
+                        tr("Audio files (*.wav *.flac *.ogg *.mp3 *.wv *.w64)"),
+                        0,
+                        QFileDialog::DontUseNativeDialog);
         
         if (list.size()) {
                 QFileInfo info(list.at(0));
@@ -421,7 +423,9 @@ void NewProjectDialog::on_changeProjectsDirButton_clicked()
 {
         QString path = pm().get_projects_directory();
         QString newPath = QFileDialog::getExistingDirectory(this,
-                        tr("Choose an existing or create a new Project Directory"), path);
+                        tr("Choose an existing or create a new Project Directory"),
+                        path,
+                        QFileDialog::DontUseNativeDialog);
 
         if (newPath.isEmpty() || newPath.isNull()) {
                 return;

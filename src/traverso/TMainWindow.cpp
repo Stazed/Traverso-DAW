@@ -1313,7 +1313,9 @@ void TMainWindow::import_audio()
 
 	QStringList files = QFileDialog::getOpenFileNames(this, tr("Open Audio Files"),
 			project->get_import_dir(),
-			tr("Audio files (*.wav *.flac *.ogg *.mp3 *.wv *.w64)"));
+			tr("Audio files (*.wav *.flac *.ogg *.mp3 *.wv *.w64)"),
+                        0,
+                        QFileDialog::DontUseNativeDialog);
 
 	if (files.isEmpty()) {
 		return;

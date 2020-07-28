@@ -675,7 +675,9 @@ void AppearenceConfigPage::dirselect_button_clicked()
 		path = QDir::homePath();
 	}
 	QString dirName = QFileDialog::getExistingDirectory(this,
-			tr("Select default project dir"), path);
+			tr("Select default project dir"),
+                        path,
+                        QFileDialog::DontUseNativeDialog);
 
 	if (!dirName.isEmpty()) {
 		themePathLineEdit->setText(dirName);

@@ -318,7 +318,9 @@ void ProjectManagerDialog::on_sheetAudioSourcesPushButton_clicked()
 
         QString path = m_project->get_audiosources_dir();
         QString newPath = QFileDialog::getExistingDirectory(this,
-                        tr("Choose or create a new Audio Sources Directory"), path);
+                        tr("Choose or create a new Audio Sources Directory"),
+                        path,
+                        QFileDialog::DontUseNativeDialog);
 
         if (newPath.isEmpty() || newPath.isNull()) {
                 return;

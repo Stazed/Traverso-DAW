@@ -148,7 +148,10 @@ void ExportDialog::on_fileSelectButton_clicked( )
 		return;
 	}
 	
-	QString dirName = QFileDialog::getExistingDirectory(this, tr("Choose/create an export directory"), m_exportSpec->exportdir);
+	QString dirName = QFileDialog::getExistingDirectory(this,
+                tr("Choose/create an export directory"),
+                m_exportSpec->exportdir,
+                QFileDialog::DontUseNativeDialog);
 	
 	if (!dirName.isEmpty()) {
 		exportDirName->setText(dirName);
