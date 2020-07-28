@@ -46,7 +46,10 @@ CorrelationMeterWidget::CorrelationMeterWidget(QWidget* parent)
 
 
 CorrelationMeterView::CorrelationMeterView(CorrelationMeterWidget* widget)
-    : MeterView(widget)
+    : MeterView(widget),
+    coeff(),
+    direction(),
+    range()
 {
     m_meter = new CorrelationMeter();
     m_meter->init();
