@@ -439,7 +439,8 @@ int Peak::finish_processing()
         // The routine below uses a different total buffer size calculation
         // which might end up with a size >= totalbufferSize !!!
         // Need to look into that, for now + 2 seems to work...
-        peak_data_t* saveBuffer = new peak_data_t[totalBufferSize + 1*sizeof(peak_data_t)];
+        peak_data_t* saveBuffer = new peak_data_t[totalBufferSize + 2*sizeof(peak_data_t)];
+        memset(saveBuffer, 0, sizeof (saveBuffer));
 
         int read = data->file.read((char*)saveBuffer, sizeof(peak_data_t) * data->pd->processBufferSize) / sizeof(peak_data_t);
 
