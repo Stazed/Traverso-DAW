@@ -52,7 +52,6 @@ CorrelationMeterView::CorrelationMeterView(CorrelationMeterWidget* widget)
     range()
 {
     m_meter = new CorrelationMeter();
-    m_meter->init();
 
     load_theme_data();
     load_configuration();

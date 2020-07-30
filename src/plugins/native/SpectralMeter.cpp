@@ -42,7 +42,7 @@ SpectralMeter::SpectralMeter()
 	m_windowingFunction = 1;
 	m_bufferreadouts = 0;
 
-    init();
+        init();
 
 	// constructs a ringbuffer that can hold 16384 samples
 	m_databufferL = new RingBufferNPT<float>(16384);
@@ -54,6 +54,20 @@ SpectralMeter::~SpectralMeter()
 {
 	delete m_databufferL;
 	delete m_databufferR;
+
+        cleanup();
+}
+
+void SpectralMeter::cleanup()
+{
+        free(fftsigl);
+        free(fftsigr);
+        free(win);
+        fftw_free(fftspecl);
+        fftw_free(fftspecr);
+        fftw_destroy_plan(pfegl);
+        fftw_destroy_plan(pfegr);
+        fftw_cleanup();
 }
 
 

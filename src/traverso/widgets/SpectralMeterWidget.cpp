@@ -65,7 +65,6 @@ SpectralMeterView::SpectralMeterView(SpectralMeterWidget* widget)
 	m_config = 0;
 
         m_meter = new SpectralMeter();
-        m_meter->init();
 
 	load_configuration();
 	
@@ -465,6 +464,7 @@ void SpectralMeterView::load_configuration()
 	show_average = config().get_property("SpectralMeter", "ShowAvarage", 0).toInt();
 	
 	if (m_meter) {
+                ((SpectralMeter*)m_meter)->cleanup();
 		((SpectralMeter*)m_meter)->set_fr_size(config().get_property("SpectralMeter", "FFTSize", 2048).toInt());
 		((SpectralMeter*)m_meter)->set_windowing_function(config().get_property("SpectralMeter", "WindowingFunction", 1).toInt());
 		((SpectralMeter*)m_meter)->init();

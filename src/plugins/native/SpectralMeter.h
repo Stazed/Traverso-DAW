@@ -46,6 +46,7 @@ public:
 	SpectralMeter();
 	~SpectralMeter();
 
+        void cleanup();
 	int init();
 	QDomNode get_state(QDomDocument doc);
 	int set_state(const QDomNode & node );
