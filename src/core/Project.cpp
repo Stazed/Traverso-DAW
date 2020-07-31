@@ -373,8 +373,8 @@ int Project::load(const QString& projectfile)
 
             /* Set up default jack master channels */
             BusConfig conf;
-            conf.name = "jackmaster";
-            conf.channelNames << "jackmaster_0" << "jackmaster_1";
+            conf.name = "Jackmaster";
+            conf.channelNames << "Jackmaster : 0 : out" << "Jackmaster : 1 : out";
             conf.type = "output";
             conf.bustype = "software";
             conf.id = MASTER_OUT_SOFTWARE_BUS_ID;
