@@ -140,6 +140,7 @@ class TShortcutManager : public QObject
 	Q_OBJECT
 public:
 
+    ~TShortcutManager();
     void createAndAddFunction(const QString &object, const QString &description, const QString &slotSignature, const QString &commandName, const QString& inheritedBase = "");
 	void registerFunction(TFunction* function);
 	TFunction* getFunction(const QString& function) const;

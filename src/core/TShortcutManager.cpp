@@ -242,6 +242,19 @@ TShortcutManager::TShortcutManager()
 	cpointer().add_contextitem(this);
 }
 
+TShortcutManager::~TShortcutManager()
+{
+    foreach(TShortcut* shortCut, m_shortcuts)
+    {
+        delete shortCut;
+    }
+    
+    foreach(TFunction* function, m_functions)
+    {
+        delete function;
+    }
+}
+
 void TShortcutManager::registerFunction(TFunction *function)
 {
 	if (m_functions.contains(function->commandName))
