@@ -74,7 +74,7 @@ public:
 public slots:
 	TCommand* save_project();
         TCommand* close_current_project();
-        TCommand* exit();
+        TCommand* exit(bool abort = false);
 	TCommand* undo();
 	TCommand* redo();
 
@@ -91,7 +91,7 @@ private:
 
         static QUndoGroup	m_undogroup;
 	
-	void set_current_project(Project* project);
+	void set_current_project(Project* project, bool abort = false);
 	void cleanup_backupfiles_for_project(const QString& projectname);
 	bool project_is_current(const QString& title);
 	

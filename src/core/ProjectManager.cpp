@@ -95,32 +95,36 @@ ResourcesManager* resources_manager()
 	return 0;
 }
 
-void ProjectManager::set_current_project(Project* project)
+void ProjectManager::set_current_project(Project* project, bool abort)
 {
 	PENTER;
 
         QString oldprojectname = "";
 	
-        if (m_currentProject) {
+        if (m_currentProject)
+        {
 
                 ied().reject_current_hold_actions();
+                
+                if(!abort)  // Used for NSM close with no save if true
+                {
 
 //                printf("exit in progress");
-                QString oncloseaction = config().get_property("Project", "onclose", "save").toString();
-                if (oncloseaction == "save") {
-                        m_currentProject->save();
-                } else if (oncloseaction == "ask") {
-                        QMessageBox::StandardButton button =
-                                QMessageBox::question(0,
-                                tr("Save Project"),
-                                tr("Should Project '%1' be safed before closing it?").arg(m_currentProject->get_title()),
-                                QMessageBox::Yes | QMessageBox::No,
-                                QMessageBox::Yes);
-                        if (button  == QMessageBox::Yes) {
-                                m_currentProject->save();
-                        }
-                }
-		
+                    QString oncloseaction = config().get_property("Project", "onclose", "save").toString();
+                    if (oncloseaction == "save") {
+                            m_currentProject->save();
+                    } else if (oncloseaction == "ask") {
+                            QMessageBox::StandardButton button =
+                                    QMessageBox::question(0,
+                                    tr("Save Project"),
+                                    tr("Should Project '%1' be saved before closing it?").arg(m_currentProject->get_title()),
+                                    QMessageBox::Yes | QMessageBox::No,
+                                    QMessageBox::Yes);
+                            if (button  == QMessageBox::Yes) {
+                                    m_currentProject->save();
+                            }
+                    }
+		}
                 oldprojectname = m_currentProject->get_title();
 
                 m_currentProject->disconnect_from_audio_device();
@@ -324,7 +328,7 @@ QUndoGroup* ProjectManager::get_undogroup() const
 }
 
 
-TCommand* ProjectManager::exit()
+TCommand* ProjectManager::exit(bool abort)
 {
 	PENTER;
 	
@@ -332,12 +336,12 @@ TCommand* ProjectManager::exit()
                 if (m_currentProject->get_sheets().size() == 0) {
 			// No sheets to unregister from the audiodevice,
 			// just save and quit:
-			set_current_project(0);
+			set_current_project(0, abort);
 			QApplication::exit();
 			return 0;
                 } else if (m_currentProject->is_save_to_close()) {
 			m_exitInProgress = true;
-			set_current_project(0);
+			set_current_project(0, abort);
                         QApplication::exit();
 		} else {
 			return 0;

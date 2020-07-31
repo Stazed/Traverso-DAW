@@ -52,14 +52,29 @@ int signalcount = 0;
 #if defined (Q_OS_UNIX) || defined (Q_OS_MAC)
 void catch_signal(int sig_num)
 {
-	if (!signalcount) {
-		++signalcount;
-		traverso->shutdown(sig_num);
+	if (!signalcount)
+        {
+            // NSM Proxy session support
+            switch(sig_num)
+            {
+            case SIGTERM :  // 15
+                //printf("Got SIGTERM\n");
+                traverso->shutdown(sig_num);
 		exit(0);
+                return;
+            case SIGUSR1 :  // 10
+                //printf("Got SIGUSR1\n");
+                pm().get_project()->save();
+                return;
+            }
+            
+            ++signalcount;
+            traverso->shutdown(sig_num);
+            exit(0);
 	} else {
-                printf("Caught multiple signals, aborting !\n");
-		kill (-getpgrp(), SIGABRT);
-		exit(-1);
+            printf("Caught multiple signals, aborting !\n");
+            kill (-getpgrp(), SIGABRT);
+            exit(-1);
 	}
 }
 #endif
@@ -73,6 +88,10 @@ int main( int argc, char **argv )
 #if defined (Q_OS_UNIX) || defined (Q_OS_MAC)
 	signal(SIGINT, catch_signal);
 	signal(SIGSEGV, catch_signal);
+
+        // For NSM Proxy session handling
+        signal(SIGUSR1, catch_signal);      // save
+        signal(SIGTERM, catch_signal);      // stop, no save
 #endif
 
 	TraversoDebugger::set_debug_level(TraversoDebugger::OFF);

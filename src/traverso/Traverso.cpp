@@ -164,12 +164,16 @@ void Traverso::create_interface( )
 void Traverso::shutdown( int signal )
 {
     PENTER;
-
+    
     // Just in case the mouse was grabbed...
     cpointer().hold_finished();
     QApplication::processEvents();
 
     switch(signal) {
+    case SIGTERM:
+        pm().exit(true);    // true for abort, no save
+        return;
+        
     case SIGINT:
         printf("\nCaught the SIGINT signal!\nShutting down Traverso!\n\n");
         pm().exit();
