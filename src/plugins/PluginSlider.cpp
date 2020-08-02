@@ -126,15 +126,32 @@ void PluginSlider::enterEvent( QEvent * )
 
 void PluginSlider::wheelEvent( QWheelEvent* e )
 {
+    float use_modifier = 1.0;
+    
+    int type = 1;       // no modifiers
+    
+    if( e->modifiers() & Qt::ShiftModifier )
+    {
+        type *= 10;     // shift only = 10
+    }
+    
+    if( e->modifiers() & Qt::ControlModifier )
+    {
+        type *= 100;    // control only = 100
+    }
+    
+    use_modifier *= type;   // if both  then = 1000
+    
+
 	if (e->orientation() == Qt::Vertical) {
 		if (e->delta() > 0) {
-			m_value += m_stepvalue;
+			m_value += (m_stepvalue / use_modifier);
 			if (m_value > m_max) {
 				m_value = m_max;
 			}
 		}
 		if (e->delta() < 0) {
-			m_value -= m_stepvalue;
+			m_value -= (m_stepvalue / use_modifier);
 			if (m_value < m_min) {
 				m_value = m_min;
 			}
