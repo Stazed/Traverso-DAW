@@ -126,21 +126,18 @@ void PluginSlider::enterEvent( QEvent * )
 
 void PluginSlider::wheelEvent( QWheelEvent* e )
 {
-    float use_modifier = 1.0;
-    
-    int type = 1;       // no modifiers
+    float use_modifier = 1.0;   // no modifiers
     
     if( e->modifiers() & Qt::ShiftModifier )
     {
-        type *= 10;     // shift only = 10
+        use_modifier *= 10.0;     // shift only = 10
     }
     
     if( e->modifiers() & Qt::ControlModifier )
     {
-        type *= 100;    // control only = 100
+        use_modifier *= 100.0;    // control only = 100
     }
-    
-    use_modifier *= type;   // if both  then = 1000
+    // if both  then = 1000
     
 
 	if (e->orientation() == Qt::Vertical) {
