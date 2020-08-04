@@ -371,11 +371,11 @@ void LV2ControlPort::init()
 {
 	foreach(const QString &string, get_hints()) {
 		if (string == "http://lv2plug.in/ns/lv2core#logarithmic") {
-			m_hint = LOG_CONTROL;
+                        m_hint = LOG_CONTROL;
 		} else  if (string == "http://lv2plug.in/ns/lv2core#integer") {
-			m_hint = INT_CONTROL;
+                        m_hint = INT_CONTROL;
         }
-	}
+    }
 }
 
 QDomNode LV2ControlPort::get_state( QDomDocument doc )
@@ -467,25 +467,31 @@ TCommand * LV2Plugin::toggle_bypass()
 
 PluginInfo LV2Plugin::get_plugin_info(const LilvPlugin* plugin)
 {
-	PluginInfo info;
-	info.name = lilv_node_as_string(lilv_plugin_get_name(plugin));
-	info.uri = lilv_node_as_string(lilv_plugin_get_uri(plugin));
-	
-	
-	LilvWorld* world = PluginManager::instance()->get_lilv_world();
-	LilvNode* input = lilv_new_uri(world, LILV_URI_INPUT_PORT);
-	LilvNode* output = lilv_new_uri(world, LILV_URI_OUTPUT_PORT);
-	LilvNode* audio = lilv_new_uri(world, LILV_URI_AUDIO_PORT);
+    PluginInfo info;
+
+    LilvNode *name = lilv_plugin_get_name(plugin);
+    if (name)
+    {
+        info.name = lilv_node_as_string(name);
+        lilv_node_free(name);
+    } 
+
+    info.uri = lilv_node_as_string(lilv_plugin_get_uri(plugin));
+
+    LilvWorld* world = PluginManager::instance()->get_lilv_world();
+    LilvNode* input = lilv_new_uri(world, LILV_URI_INPUT_PORT);
+    LilvNode* output = lilv_new_uri(world, LILV_URI_OUTPUT_PORT);
+    LilvNode* audio = lilv_new_uri(world, LILV_URI_AUDIO_PORT);
 	
     info.audioPortInCount = int(lilv_plugin_get_num_ports_of_class(plugin, input, audio, nullptr));
     info.audioPortOutCount = int(lilv_plugin_get_num_ports_of_class(plugin, output, audio, nullptr));
-	info.type = lilv_node_as_string(lilv_plugin_class_get_label(lilv_plugin_get_class(plugin)));
-	
-	lilv_node_free(input);
-	lilv_node_free(output);
-	lilv_node_free(audio);
-	
-	return info;
+    info.type = lilv_node_as_string(lilv_plugin_class_get_label(lilv_plugin_get_class(plugin)));
+
+    lilv_node_free(input);
+    lilv_node_free(output);
+    lilv_node_free(audio);
+
+    return info;
 }
 
 //eof
