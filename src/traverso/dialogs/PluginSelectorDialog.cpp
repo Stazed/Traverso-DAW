@@ -23,9 +23,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 
 #include <QHeaderView>
 
-#if defined (LV2_SUPPORT)
-#include <LV2Plugin.h>
-#endif
 
 #include "TMainWindow.h"
 #include <Plugin.h>
@@ -45,47 +42,69 @@ PluginSelectorDialog::PluginSelectorDialog(QWidget* parent)
 	setupUi(this);
 
 	pluginTreeWidget->header()->resizeSection(0, 250);
-    pluginTreeWidget->header()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+        pluginTreeWidget->header()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
 	pluginTreeWidget->header()->resizeSection(2, 60);
 	
 
 #if defined (LV2_SUPPORT)
         printf("Getting the list of found lv2 plugins from the PluginManager\n");
-	const LilvPlugins* pluginList = PluginManager::instance()->get_lilv_plugins();
-
-	QMap<QString, PluginInfo> pluginsMap;
-
-	printf("Number of found lv2 plugins: %d\n", lilv_plugins_size(pluginList));
-	
-	LILV_FOREACH(plugins, i, pluginList) {
-
-		const LilvPlugin* p = lilv_plugins_get(pluginList, i);
-		PluginInfo pinfo = LV2Plugin::get_plugin_info(p);
-		pluginsMap.insertMulti(pinfo.type, pinfo);
-	}
-	
-	foreach(PluginInfo pinfo, pluginsMap) {
-		
-		if ( (pinfo.audioPortInCount == 1 && pinfo.audioPortOutCount ==  1) ||
-		     (pinfo.audioPortInCount == 2 && pinfo.audioPortOutCount ==  2) ) {
-			
-			QString inoutcount = pinfo.audioPortInCount == 1 ? "Mono" : "Stereo";
-			
-			QTreeWidgetItem* item = new QTreeWidgetItem(pluginTreeWidget);
-			item->setText(0, pinfo.name);
-			item->setText(1, pinfo.type.remove("Plugin"));
-			item->setText(2, inoutcount);
-			item->setData(0, Qt::UserRole, QString(pinfo.uri));
-			item->setToolTip(0, pinfo.name);
-		}
-	}
+	pluginList = PluginManager::instance()->get_lilv_plugins();
+        printf("Number of found lv2 plugins: %d\n", lilv_plugins_size(pluginList));
+        
+        refresh();
 #endif
+        
+        pluginTreeWidget->setSortingEnabled(true);
+	pluginTreeWidget->sortItems(0, Qt::AscendingOrder);
+        
+        searchComboBox->setFocus();
+        
+        connect(searchComboBox,	SIGNAL(editTextChanged(const QString&)), SLOT(refresh()));
 
 	connect(pluginTreeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(plugin_double_clicked()));
 }
 
 PluginSelectorDialog::~PluginSelectorDialog( )
 {}
+
+void PluginSelectorDialog::refresh(void)
+{
+#if defined (LV2_SUPPORT)
+    pluginTreeWidget->clear();
+    
+    QString sSearch = searchComboBox->currentText().simplified();
+    const QRegExp regexp(sSearch.replace(QRegExp("[\\s]+"), ".*"), Qt::CaseInsensitive);
+    
+    QMap<QString, PluginInfo> pluginsMap;
+
+    LILV_FOREACH(plugins, i, pluginList)
+    {
+        const LilvPlugin* p = lilv_plugins_get(pluginList, i);
+        PluginInfo pinfo = LV2Plugin::get_plugin_info(p);
+        pluginsMap.insertMulti(pinfo.type, pinfo);
+    }
+
+    foreach(PluginInfo pinfo, pluginsMap)
+    {
+        const QString& sName = pinfo.name;
+        if(regexp.isEmpty() || regexp.indexIn(sName) >= 0)
+        {
+            if ( (pinfo.audioPortInCount == 1 && pinfo.audioPortOutCount ==  1) ||
+                 (pinfo.audioPortInCount == 2 && pinfo.audioPortOutCount ==  2) )
+            {
+                QString inoutcount = pinfo.audioPortInCount == 1 ? "Mono" : "Stereo";
+
+                QTreeWidgetItem* item = new QTreeWidgetItem(pluginTreeWidget);
+                item->setText(0, pinfo.name);
+                item->setText(1, pinfo.type.remove("Plugin"));
+                item->setText(2, inoutcount);
+                item->setData(0, Qt::UserRole, QString(pinfo.uri));
+                item->setToolTip(0, pinfo.name);
+            }
+        }
+    }
+#endif  // LV2_SUPPORT
+}
 
 void PluginSelectorDialog::on_cancelButton_clicked( )
 {

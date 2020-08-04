@@ -31,6 +31,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include <QSpacerItem>
 #include <QTreeWidget>
 #include <QVBoxLayout>
+#include <QComboBox>
+
+#if defined (LV2_SUPPORT)
+#include <LV2Plugin.h>
+#endif
 
 
 class Plugin;
@@ -59,8 +64,13 @@ private:
 	QSpacerItem *spacerItem{};
 	QPushButton *okButton{};
 	QPushButton *cancelButton{};
+        QComboBox   *searchComboBox{};
 	
 	Plugin* m_plugin{};
+
+#if defined (LV2_SUPPORT)
+        const LilvPlugins* pluginList;
+#endif
 
 	void setupUi(QDialog *PluginSelectorDialog)
 	{
@@ -81,9 +91,15 @@ private:
 		objectToAddPluginTooLabel->setObjectName(QString::fromUtf8("objectToAddPluginTooLabel"));
 
 		vboxLayout->addWidget(objectToAddPluginTooLabel);
+                
+                searchComboBox = new QComboBox(PluginSelectorDialog);
+                searchComboBox->setObjectName(QString::fromUtf8("searchComboBox"));
+                searchComboBox->setEditable(true);
+                vboxLayout->addWidget(searchComboBox);
 
 		pluginTreeWidget = new QTreeWidget(PluginSelectorDialog);
 		pluginTreeWidget->setObjectName(QString::fromUtf8("pluginTreeWidget"));
+                pluginTreeWidget->setSortingEnabled(true);
 
 		vboxLayout->addWidget(pluginTreeWidget);
 
@@ -112,6 +128,7 @@ private:
 
 
 		retranslateUi(PluginSelectorDialog);
+                
 		QObject::connect(cancelButton, SIGNAL(clicked()), PluginSelectorDialog, SLOT(reject()));
 		QObject::connect(okButton, SIGNAL(clicked()), PluginSelectorDialog, SLOT(accept()));
 		QObject::connect(pluginTreeWidget, SIGNAL(activated(QModelIndex)), okButton, SLOT(click()));
@@ -135,6 +152,7 @@ private slots:
 	void on_okButton_clicked();
 	void on_cancelButton_clicked();
 	void plugin_double_clicked();
+        void refresh();
 	
 };
 
