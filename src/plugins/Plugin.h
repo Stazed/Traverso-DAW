@@ -79,6 +79,9 @@ public:
     void set_sliders(QList<PluginSlider*> sliders) {m_sliders = sliders; }
     PluginSlider* get_slider_by_index(int index);
     void update_parameter_value(unsigned long port_index, float val);
+    
+    // Default preset name (global).
+    static const QString& defPreset() {return g_DefaultPreset;}
 
 protected:
     Plugin*                         m_slave;
@@ -90,6 +93,9 @@ protected:
 
     bool	m_bypass;
     bool        m_isLV2;
+    
+    // Default preset name.
+    static QString g_DefaultPreset;
 
 
 signals:

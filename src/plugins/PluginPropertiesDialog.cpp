@@ -69,7 +69,7 @@ PluginPropertiesDialog::PluginPropertiesDialog(QWidget* parent, Plugin* plugin)
             m_presetComboBox->setObjectName(QStringLiteral("PresetComboBox"));
             m_presetComboBox->setMinimumSize(QSize(160, 25));
             m_presetComboBox->setEditable(true);
-            m_presetComboBox->setToolTip("Preset name");
+            m_presetComboBox->setToolTip(tr("Preset name"));
             m_presetComboBox->setValidator(
                     new QRegExpValidator(QRegExp("[\\w-]+"), m_presetComboBox));
             m_presetComboBox->setInsertPolicy(QComboBox::NoInsert);
@@ -166,13 +166,13 @@ void PluginPropertiesDialog::changePresetSlot ( const QString& sPreset )
         QString sEditText = sPreset;
 
 	if (sEditText.isEmpty())
-            sEditText = "default";
+            sEditText = Plugin::defPreset();
 
 	m_presetComboBox->setEditText(sEditText);
     }
     else
     {
-        m_presetComboBox->setEditText("(Set Preset)");
+        m_presetComboBox->setEditText(tr("(Set Preset)"));
     }
 }
 
@@ -187,7 +187,7 @@ void PluginPropertiesDialog::loadPresetSlot ( const QString& sPreset )
     
     LV2Plugin *plug = (LV2Plugin*) m_plugin;
     
-    if(sPreset == "default" || (!plug->loadPreset(sPreset)))
+    if(sPreset == plug->defPreset() || (!plug->loadPreset(sPreset)))
     {
         reset_button_clicked();
     }
@@ -205,7 +205,7 @@ void PluginPropertiesDialog::refresh (void)
     m_presetComboBox->clear();
     m_presetComboBox->insertItems(0, plug->presetList());
     m_presetComboBox->model()->sort(0);
-    m_presetComboBox->addItem("default");
+    m_presetComboBox->addItem(plug->defPreset());
     m_presetComboBox->setEditText(sOldPreset);
 }
 

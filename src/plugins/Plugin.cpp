@@ -28,6 +28,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 
 #include "Debugger.h"
 
+// Default preset name (global).
+QString Plugin::g_DefaultPreset = QObject::tr("(default)");
+
 Plugin::Plugin(TSession* session)
 	: m_slave(nullptr)
         , m_session(session)
