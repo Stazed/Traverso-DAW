@@ -100,6 +100,33 @@ PluginControlPort* Plugin::get_control_port_by_index(int index) const
 	return nullptr;
 }
 
+PluginSlider* Plugin::get_slider_by_index(int index)
+{
+    foreach(PluginControlPort* port, m_controlPorts)
+    {
+        if (port->get_index() == index)
+        {
+            foreach(PluginSlider* slider, m_sliders)
+            {
+                if(slider->get_port() == port)
+                {
+                    return slider;
+                }
+            }
+        }
+    }
+    return nullptr;
+}
+
+void Plugin::update_parameter_value(unsigned long port_index, float val)
+{
+    PluginSlider* slider = get_slider_by_index(port_index);
+    if(slider == nullptr)
+        return;
+
+    slider->update_LV2_preset_position(val);
+}
+
 void Plugin::automate_port(int index, bool automate)
 {
 	PluginControlPort* port = get_control_port_by_index(index);

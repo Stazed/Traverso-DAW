@@ -172,3 +172,8 @@ void PluginSlider::reset_default_value()
 	update_slider_position();
 }
 
+void PluginSlider::update_LV2_preset_position(float value)
+{
+    m_value = value;
+    update_slider_position();
+}

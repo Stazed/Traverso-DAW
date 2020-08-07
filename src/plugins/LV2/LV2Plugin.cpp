@@ -31,6 +31,96 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 	#include <cmath>
 	extern "C" int isnan(double);
 #endif
+        
+// URI map/unmap features.
+#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
+
+static QHash<QString, LV2_URID>    g_uri_map;
+static QHash<LV2_URID, QByteArray> g_ids_map;
+
+static LV2_URID traverso_lv2_urid_map (
+	LV2_URID_Map_Handle /*handle*/, const char *uri )
+{
+    return LV2Plugin::lv2_urid_map(uri);
+}
+
+static LV2_URID_Map g_lv2_urid_map =
+	{ NULL, traverso_lv2_urid_map };
+static const LV2_Feature g_lv2_urid_map_feature =
+	{ LV2_URID_MAP_URI, &g_lv2_urid_map };
+
+
+static const char *traverso_lv2_urid_unmap (
+	LV2_URID_Unmap_Handle /*handle*/, LV2_URID id )
+{
+    return LV2Plugin::lv2_urid_unmap(id);
+}
+
+static LV2_URID_Unmap g_lv2_urid_unmap =
+    { NULL, traverso_lv2_urid_unmap };
+static const LV2_Feature g_lv2_urid_unmap_feature =
+    { LV2_URID_UNMAP_URI, &g_lv2_urid_unmap };
+
+
+// URI map helpers (static).
+LV2_URID LV2Plugin::lv2_urid_map ( const char *uri )
+{
+	const QString sUri(uri);
+
+	QHash<QString, uint32_t>::ConstIterator iter
+		= g_uri_map.constFind(sUri);
+	if (iter == g_uri_map.constEnd()) {
+		LV2_URID id = g_uri_map.size() + 1000;
+		g_uri_map.insert(sUri, id);
+		g_ids_map.insert(id, sUri.toUtf8());
+		return id;
+	}
+
+	return iter.value();
+}
+
+const char *LV2Plugin::lv2_urid_unmap ( LV2_URID id )
+{
+	QHash<LV2_URID, QByteArray>::ConstIterator iter
+		= g_ids_map.constFind(id);
+	if (iter == g_ids_map.constEnd())
+		return NULL;
+
+	return iter.value().constData();
+}
+
+// LV2 Presets: port value setter.
+static void traverso_lv2_set_port_value ( const char *port_symbol,
+	void *user_data, const void *value, uint32_t size, uint32_t type )
+{
+    LV2Plugin *pLv2Plugin = static_cast<LV2Plugin *> (user_data);
+    if (pLv2Plugin == NULL)
+            return;
+
+    const LilvPlugin *plugin = pLv2Plugin->get_slv2_plugin();
+    if (plugin == NULL)
+            return;
+
+    if (size != sizeof(float))
+            return;
+
+    LilvWorld* world = PluginManager::instance()->get_lilv_world();
+
+    LilvNode *symbol = lilv_new_string(world, port_symbol);
+
+    const LilvPort *port = lilv_plugin_get_port_by_symbol(plugin, symbol);
+
+    if (port)
+    {
+        const float val = *(float *) value;
+        const unsigned long port_index = lilv_port_get_index(plugin, port);
+
+        pLv2Plugin->update_parameter_value(port_index, val);
+    }
+
+    lilv_node_free(symbol);
+}
+
 
 #include <Debugger.h>
 
@@ -140,7 +230,9 @@ int LV2Plugin::set_state(const QDomNode & node )
 			portNode = portNode.nextSibling();
 		}
 	}
-	
+        
+        get_plugin_presets();
+        
 	/* Activate the plugin instance */
 	lilv_instance_activate(m_instance);
 	
@@ -157,7 +249,7 @@ int LV2Plugin::set_state(const QDomNode & node )
 int LV2Plugin::init()
 {
 	m_num_ports = 0;
-    m_ports = nullptr;
+        m_ports = nullptr;
 	
 	LilvWorld* world = PluginManager::instance()->get_lilv_world();
 	
@@ -166,14 +258,14 @@ int LV2Plugin::init()
 	m_output_class = lilv_new_uri(world, LILV_URI_OUTPUT_PORT);
 	m_control_class = lilv_new_uri(world, LILV_URI_CONTROL_PORT);
 	m_audio_class = lilv_new_uri(world, LILV_URI_AUDIO_PORT);
-	m_event_class = lilv_new_uri(world, LILV_URI_EVENT_PORT);
-
+	m_event_class = lilv_new_uri(world, LILV_URI_EVENT_PORT);       
 
 	if (create_instance() < 0) {
 		return -1;
 	}
 
-
+        get_plugin_presets();
+        
 	/* Create ports */
 	m_num_ports  = lilv_plugin_get_num_ports(m_plugin);
 // 	float* default_values  = new float(slv2_plugin_get_num_ports(m_plugin) * sizeof(float));
@@ -242,6 +334,36 @@ int LV2Plugin::create_instance()
 	}
 	
 	return 1;
+}
+
+void LV2Plugin::get_plugin_presets()
+{
+    /* Plugin presets */
+    LilvWorld* world = PluginManager::instance()->get_lilv_world();
+    
+    LilvNode *label_uri  = lilv_new_uri(world, LILV_NS_RDFS "label");
+    LilvNode *preset_uri = lilv_new_uri(world, LV2_PRESETS__Preset);
+    LilvNodes *presets = lilv_plugin_get_related(m_plugin, preset_uri);
+    if (presets)
+    {
+        LILV_FOREACH(nodes, i, presets)
+        {
+            const LilvNode *preset = lilv_nodes_get(presets, i);
+            lilv_world_load_resource(world, preset);
+            LilvNodes *labels = lilv_world_find_nodes(world, preset, label_uri, NULL);
+            if (labels)
+            {
+                const LilvNode *label = lilv_nodes_get_first(labels);
+                const QString sPreset(lilv_node_as_string(label));
+                const QString sUri(lilv_node_as_string(preset));
+                m_lv2_presets.insert(sPreset, sUri);
+                lilv_nodes_free(labels);
+            }
+        }
+        lilv_nodes_free(presets);
+    }
+    lilv_node_free(preset_uri);
+    lilv_node_free(label_uri); 
 }
 
 
@@ -492,6 +614,51 @@ PluginInfo LV2Plugin::get_plugin_info(const LilvPlugin* plugin)
     lilv_node_free(audio);
 
     return info;
+}
+
+// Refresh and load preset labels listing. (virtual)
+QStringList LV2Plugin::presetList (void) const
+{
+    QStringList list ; // preset uri
+
+    QHash<QString, QString>::ConstIterator iter
+        = m_lv2_presets.constBegin();
+    const QHash<QString, QString>::ConstIterator& iter_end
+        = m_lv2_presets.constEnd();
+        
+    for ( ; iter != iter_end; ++iter)
+        list.append(iter.key());
+
+    return list;
+}
+
+// Load plugin state from a named preset.
+bool LV2Plugin::loadPreset ( const QString& sPreset, QList<PluginSlider*> sliders )
+{
+    const QString& sUri = m_lv2_presets.value(sPreset);
+    if (sUri.isEmpty())
+        return false;
+
+    LilvWorld* world = PluginManager::instance()->get_lilv_world();
+
+    LilvNode *preset = lilv_new_uri(world, sUri.toUtf8().constData());
+
+    LilvState *state = NULL;
+
+    state = lilv_state_new_from_world(world, &g_lv2_urid_map, preset);
+
+    if (state == NULL)
+    {
+        lilv_node_free(preset);
+        return false;
+    }
+
+    lilv_state_restore(state, m_instance, traverso_lv2_set_port_value, this, 0, NULL);
+
+    lilv_state_free(state);
+    lilv_node_free(preset);
+
+    return true;
 }
 
 //eof

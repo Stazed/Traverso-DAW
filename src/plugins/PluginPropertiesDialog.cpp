@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 
 #include "PluginPropertiesDialog.h"
 #include "Plugin.h"
+#include "LV2Plugin.h"
 
 #include <QSlider>
 #include <QLabel>
@@ -53,8 +54,37 @@ PluginPropertiesDialog::PluginPropertiesDialog(QWidget* parent, Plugin* plugin)
 	optionsLayout->addWidget(resetButton);
 	optionsLayout->addStretch(10);
 	optionsLayout->addWidget(closeButton);
-	
-	QVBoxLayout* dialogLayout = new QVBoxLayout;
+        
+        QVBoxLayout* dialogLayout = new QVBoxLayout;
+#if defined (LV2_SUPPORT)
+        bool isLV2 = false;
+        QString pluginName = m_plugin->get_name();
+        
+        if(pluginName != "Correlation Meter" && pluginName != "Gain Envelope" &&
+               pluginName != "Spectral Meter")
+        {
+            isLV2 = true;
+        }
+        
+        if(isLV2)
+        {
+            // LV2 only - FIXME
+            QWidget* comboWidget = new QWidget(this);
+            QHBoxLayout* comboLayout = new QHBoxLayout;
+            comboWidget->setLayout(comboLayout);
+            m_presetComboBox = new QComboBox(comboWidget);
+            m_presetComboBox->setObjectName(QStringLiteral("PresetComboBox"));
+            m_presetComboBox->setMinimumSize(QSize(160, 0));
+            m_presetComboBox->setEditable(true);
+            m_presetComboBox->setToolTip("Preset name");
+            m_presetComboBox->setValidator(
+                    new QRegExpValidator(QRegExp("[\\w-]+"), m_presetComboBox));
+            m_presetComboBox->setInsertPolicy(QComboBox::NoInsert);
+            m_presetComboBox->setCompleter(NULL);
+            dialogLayout->addWidget(comboWidget);
+	}
+#endif //  (LV2_SUPPORT)
+        
 	dialogLayout->addWidget(sliderWidget);
 	dialogLayout->addWidget(optionsWidget);
 	dialogLayout->setMargin(0);
@@ -105,10 +135,76 @@ PluginPropertiesDialog::PluginPropertiesDialog(QWidget* parent, Plugin* plugin)
 
 		sliderWidgetLayout->addWidget(widget);
 	}
-	
+
+#if defined (LV2_SUPPORT)
+        if(isLV2)
+        {
+            m_plugin->set_sliders(m_sliders);
+            m_presetComboBox->setValidator(
+                    new QRegExpValidator(QRegExp("[\\w-]+"), m_presetComboBox));
+            m_presetComboBox->setInsertPolicy(QComboBox::NoInsert);
+            m_presetComboBox->setCompleter(NULL);
+
+
+            connect(m_presetComboBox, SIGNAL(editTextChanged(const QString&)),
+                    SLOT(changePresetSlot(const QString&)));
+            connect(m_presetComboBox, SIGNAL(activated(const QString &)),
+                    SLOT(loadPresetSlot(const QString&)));
+	}
+#endif  // (LV2_SUPPORT)
+
 	connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 	connect(resetButton, SIGNAL(clicked()), this, SLOT(reset_button_clicked()));
 	connect(m_bypassButton, SIGNAL(clicked()), this, SLOT(bypass_button_clicked()));
+
+#if defined (LV2_SUPPORT)
+        if(isLV2)
+        {
+            refresh();
+        }
+#endif
+}
+
+// Preset management slots...
+void PluginPropertiesDialog::changePresetSlot ( const QString& sPreset )
+{
+    if (!sPreset.isEmpty() && m_presetComboBox->findText(sPreset) >= 0)
+    {
+        // FIXME update comboBox
+    }
+}
+
+
+void PluginPropertiesDialog::loadPresetSlot ( const QString& sPreset )
+{
+    if (m_plugin == NULL)
+            return;
+
+    if (sPreset.isEmpty())
+            return;
+
+    LV2Plugin *plug = (LV2Plugin*) m_plugin;
+
+    if (plug->loadPreset(sPreset, m_sliders))
+    {
+        refresh();
+    }
+}
+
+// Parameter-widget refreshner-loader.
+void PluginPropertiesDialog::refresh (void)
+{
+    if (m_plugin == NULL)
+            return;
+
+    LV2Plugin *plug = (LV2Plugin*) m_plugin;
+
+    const QString sOldPreset = m_presetComboBox->currentText();
+    m_presetComboBox->clear();
+    m_presetComboBox->insertItems(0, plug->presetList());
+    m_presetComboBox->model()->sort(0);
+    m_presetComboBox->addItem("default");
+    m_presetComboBox->setEditText(sOldPreset);
 }
 
 void PluginPropertiesDialog::bypass_button_clicked()

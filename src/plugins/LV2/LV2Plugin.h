@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include <QObject>
 
 #include "Plugin.h"
+#include <PluginSlider.h>
 
 class AudioBus;
 class LV2ControlPort;
@@ -51,6 +52,10 @@ public:
 	LilvInstance*  get_instance() const {return m_instance; }
 	const LilvPlugin* get_slv2_plugin() const {return m_plugin; }
 	LV2Plugin* create_copy();
+        
+	// URID map/unmap helpers.
+	static LV2_URID    lv2_urid_map(const char *uri);
+	static const char *lv2_urid_unmap(LV2_URID id);
 
 	QDomNode get_state(QDomDocument doc);
 	QString get_name();
@@ -60,6 +65,11 @@ public:
 	
 	static PluginInfo get_plugin_info(const LilvPlugin* plugin);
 
+        // Preset labels listing.
+        QStringList presetList() const;
+        // Load plugin state from a named preset.
+	bool loadPreset(const QString& sPreset, QList<PluginSlider*> sliders);
+        
 private:
 	QString		m_pluginUri;
 	const LilvPlugin*     m_plugin;   /**< Plugin "class" (actually just a few strings) */
@@ -72,11 +82,13 @@ private:
 	LilvNode*      m_audio_class{};   /**< Audio port class (URI) */
 	LilvNode*      m_event_class{};   /**< Event port class (URI) */
 	LilvNode*      optional{};        /**< lv2:connectionOptional port property */
+	QHash<QString, QString>    m_lv2_presets; /**< LV2 Presets label-to-uri map */
 	bool 		m_isSlave;
 	
     LV2ControlPort* create_port(uint32_t portIndex, float defaultValue);
 
 	int create_instance();
+        void get_plugin_presets();
 
 public slots:
 	TCommand* toggle_bypass();

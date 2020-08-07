@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 
 #if defined (LV2_SUPPORT)
 #include <lilv/lilv.h>
+#include "lv2/lv2plug.in/ns/ext/presets/presets.h"
 #endif
 
 #include <QDomDocument>

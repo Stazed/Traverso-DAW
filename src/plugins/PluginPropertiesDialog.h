@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #define LV2_PLUGIN_PROPERTIES_DIALOG_H
 
 #include <QDialog>
+#include <QComboBox>
 
 class Plugin;
 class PluginSlider;
@@ -37,13 +38,17 @@ public:
 	PluginPropertiesDialog(QWidget* parent, Plugin* plugin);
 	~PluginPropertiesDialog(){};
 
+        void refresh();
 
 private:
 	Plugin*	m_plugin;
 	QList<PluginSlider*> m_sliders;
 	QPushButton* m_bypassButton;
+        QComboBox* m_presetComboBox;
 	
 private slots:
+	void changePresetSlot(const QString& sPreset);
+	void loadPresetSlot(const QString& sPreset);
 	void bypass_button_clicked();
 	void reset_button_clicked();
 };

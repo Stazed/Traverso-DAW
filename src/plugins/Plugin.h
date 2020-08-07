@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 
 #include "defines.h"
 #include "APILinkedList.h"
+#include "PluginSlider.h"
 
 class AudioBus;
 class PluginChain;
@@ -74,6 +75,9 @@ public:
     bool is_bypassed() const {return m_bypass;}
 
     void automate_port(int index, bool automate);
+    void set_sliders(QList<PluginSlider*> sliders) {m_sliders = sliders; }
+    PluginSlider* get_slider_by_index(int index);
+    void update_parameter_value(unsigned long port_index, float val);
 
 protected:
     Plugin*                         m_slave;
@@ -81,6 +85,7 @@ protected:
     QList<PluginControlPort* > 	m_controlPorts;
     QList<AudioInputPort* >		m_audioInputPorts;
     QList<AudioOutputPort* >	m_audioOutputPorts;
+    QList<PluginSlider*>        m_sliders;
 
     bool	m_bypass;
 

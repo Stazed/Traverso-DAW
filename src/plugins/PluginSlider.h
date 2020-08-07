@@ -40,6 +40,8 @@ public:
 	void paint(QPainter *);
 	void reset_default_value();
 	void update_slider_position();
+        void update_LV2_preset_position(float value);
+        PluginControlPort* get_port() {return m_port;}
 	
 protected:
 	void paintEvent(QPaintEvent *);
