@@ -102,19 +102,19 @@ PluginControlPort* Plugin::get_control_port_by_index(int index) const
 
 PluginSlider* Plugin::get_slider_by_index(int index)
 {
-    foreach(PluginControlPort* port, m_controlPorts)
+    PluginControlPort* port = get_control_port_by_index(index);
+    
+    if(port)
     {
-        if (port->get_index() == index)
+        foreach(PluginSlider* slider, m_sliders)
         {
-            foreach(PluginSlider* slider, m_sliders)
+            if(slider->get_port() == port)
             {
-                if(slider->get_port() == port)
-                {
-                    return slider;
-                }
+                return slider;
             }
         }
     }
+    
     return nullptr;
 }
 

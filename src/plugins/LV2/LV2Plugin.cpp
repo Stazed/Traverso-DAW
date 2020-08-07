@@ -633,7 +633,7 @@ QStringList LV2Plugin::presetList (void) const
 }
 
 // Load plugin state from a named preset.
-bool LV2Plugin::loadPreset ( const QString& sPreset, QList<PluginSlider*> sliders )
+bool LV2Plugin::loadPreset ( const QString& sPreset)
 {
     const QString& sUri = m_lv2_presets.value(sPreset);
     if (sUri.isEmpty())

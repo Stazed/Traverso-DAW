@@ -170,7 +170,16 @@ void PluginPropertiesDialog::changePresetSlot ( const QString& sPreset )
 {
     if (!sPreset.isEmpty() && m_presetComboBox->findText(sPreset) >= 0)
     {
-        // FIXME update comboBox
+        QString sEditText = sPreset;
+
+	if (sEditText.isEmpty())
+            sEditText = "default";
+
+	m_presetComboBox->setEditText(sEditText);
+    }
+    else
+    {
+        m_presetComboBox->setEditText("default");
     }
 }
 
@@ -182,12 +191,12 @@ void PluginPropertiesDialog::loadPresetSlot ( const QString& sPreset )
 
     if (sPreset.isEmpty())
             return;
-
+    
     LV2Plugin *plug = (LV2Plugin*) m_plugin;
-
-    if (plug->loadPreset(sPreset, m_sliders))
+    
+    if(sPreset == "default" || (!plug->loadPreset(sPreset)))
     {
-        refresh();
+        reset_button_clicked();
     }
 }
 

@@ -68,7 +68,7 @@ public:
         // Preset labels listing.
         QStringList presetList() const;
         // Load plugin state from a named preset.
-	bool loadPreset(const QString& sPreset, QList<PluginSlider*> sliders);
+	bool loadPreset(const QString& sPreset);
         
 private:
 	QString		m_pluginUri;
