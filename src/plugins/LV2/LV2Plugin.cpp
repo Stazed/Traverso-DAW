@@ -143,7 +143,8 @@ LV2Plugin::LV2Plugin(TSession* session, bool slave)
         : Plugin(session)
     , m_plugin(nullptr)
 {
-	m_isSlave = slave;
+    m_isSlave = slave;
+    m_isLV2 = true;
 }
 
 
@@ -151,8 +152,9 @@ LV2Plugin::LV2Plugin(TSession* session, char* pluginUri)
         : Plugin(session)
     , m_pluginUri(pluginUri)
     , m_plugin(nullptr)
-	, m_isSlave(false)
+    , m_isSlave(false)
 {
+    m_isLV2 = true;
 }
 
 

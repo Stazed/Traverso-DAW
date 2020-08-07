@@ -57,18 +57,10 @@ PluginPropertiesDialog::PluginPropertiesDialog(QWidget* parent, Plugin* plugin)
         
         QVBoxLayout* dialogLayout = new QVBoxLayout;
 #if defined (LV2_SUPPORT)
-        bool isLV2 = false;
-        QString pluginName = m_plugin->get_name();
-        
-        if(pluginName != "Correlation Meter" && pluginName != "Gain Envelope" &&
-               pluginName != "Spectral Meter")
-        {
-            isLV2 = true;
-        }
+        bool isLV2 = m_plugin->is_LV2();
         
         if(isLV2)
         {
-            // LV2 only - FIXME
             QWidget* comboWidget = new QWidget(this);
             QHBoxLayout* comboLayout = new QHBoxLayout;
             comboWidget->setLayout(comboLayout);

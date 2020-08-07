@@ -33,6 +33,7 @@ Plugin::Plugin(TSession* session)
         , m_session(session)
 {
     m_bypass = false;
+    m_isLV2 = false;
 }
 
 bool Plugin::is_smaller_then(APILinkedListNode *node)

@@ -73,6 +73,7 @@ public:
     Plugin* get_slave() const {return m_slave;}
     TSession* get_session() const {return m_session;}
     bool is_bypassed() const {return m_bypass;}
+    bool is_LV2() const {return m_isLV2;}
 
     void automate_port(int index, bool automate);
     void set_sliders(QList<PluginSlider*> sliders) {m_sliders = sliders; }
@@ -88,6 +89,7 @@ protected:
     QList<PluginSlider*>        m_sliders;
 
     bool	m_bypass;
+    bool        m_isLV2;
 
 
 signals:
