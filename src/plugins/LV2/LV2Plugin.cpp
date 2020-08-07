@@ -142,6 +142,11 @@ enum PortType {
 LV2Plugin::LV2Plugin(TSession* session, bool slave)
         : Plugin(session)
     , m_plugin(nullptr)
+    ,m_input_class(NULL)
+    ,m_output_class(NULL)
+    ,m_control_class(NULL)
+    ,m_audio_class(NULL)
+    ,m_event_class(NULL)
 {
     m_isSlave = slave;
     m_isLV2 = true;
@@ -152,6 +157,11 @@ LV2Plugin::LV2Plugin(TSession* session, char* pluginUri)
         : Plugin(session)
     , m_pluginUri(pluginUri)
     , m_plugin(nullptr)
+    ,m_input_class(NULL)
+    ,m_output_class(NULL)
+    ,m_control_class(NULL)
+    ,m_audio_class(NULL)
+    ,m_event_class(NULL)
     , m_isSlave(false)
 {
     m_isLV2 = true;
@@ -165,6 +175,15 @@ LV2Plugin::~LV2Plugin()
 		lilv_instance_deactivate(m_instance);
 		lilv_instance_free(m_instance);
 	}
+        
+        lilv_node_free(m_input_class);
+        lilv_node_free(m_output_class);
+        lilv_node_free(m_control_class);
+        lilv_node_free(m_audio_class);
+        lilv_node_free(m_event_class);
+        
+        if(m_slave != nullptr)
+            delete(m_slave);
 }
 
 
@@ -254,13 +273,13 @@ int LV2Plugin::init()
         m_ports = nullptr;
 	
 	LilvWorld* world = PluginManager::instance()->get_lilv_world();
-	
+        
 	/* Set up the port classes this app supports */
 	m_input_class = lilv_new_uri(world, LILV_URI_INPUT_PORT);
 	m_output_class = lilv_new_uri(world, LILV_URI_OUTPUT_PORT);
 	m_control_class = lilv_new_uri(world, LILV_URI_CONTROL_PORT);
 	m_audio_class = lilv_new_uri(world, LILV_URI_AUDIO_PORT);
-	m_event_class = lilv_new_uri(world, LILV_URI_EVENT_PORT);       
+	m_event_class = lilv_new_uri(world, LILV_URI_EVENT_PORT);   // never used  
 
 	if (create_instance() < 0) {
 		return -1;
@@ -276,17 +295,20 @@ int LV2Plugin::init()
     lilv_plugin_get_port_ranges_float(m_plugin, nullptr, nullptr, default_values);
 
 
-    for (uint32_t i=0; i < m_num_ports; ++i) {
-		LV2ControlPort* port = create_port(i, default_values[i]);
-		if (port) {
-			m_controlPorts.append(port);
-		} else {
-			// Not an audio port, or unrecognized port type
-		}
-	}
+    for (uint32_t i=0; i < m_num_ports; ++i)
+    {
+        LV2ControlPort* port = create_port(i, default_values[i]);
+        if (port)
+        {
+                m_controlPorts.append(port);
+        } else
+        {
+                // Not an audio port, or unrecognized port type
+        }
+    }
 	
 	free(default_values);
-
+        
 	/* Activate the plugin instance */
 	lilv_instance_activate(m_instance);
 	
