@@ -63,10 +63,11 @@ PluginPropertiesDialog::PluginPropertiesDialog(QWidget* parent, Plugin* plugin)
         {
             QWidget* comboWidget = new QWidget(this);
             QHBoxLayout* comboLayout = new QHBoxLayout;
+            comboLayout->setMargin(15);
             comboWidget->setLayout(comboLayout);
             m_presetComboBox = new QComboBox(comboWidget);
             m_presetComboBox->setObjectName(QStringLiteral("PresetComboBox"));
-            m_presetComboBox->setMinimumSize(QSize(160, 0));
+            m_presetComboBox->setMinimumSize(QSize(160, 25));
             m_presetComboBox->setEditable(true);
             m_presetComboBox->setToolTip("Preset name");
             m_presetComboBox->setValidator(
@@ -171,7 +172,7 @@ void PluginPropertiesDialog::changePresetSlot ( const QString& sPreset )
     }
     else
     {
-        m_presetComboBox->setEditText("default");
+        m_presetComboBox->setEditText("(Set Preset)");
     }
 }
 
