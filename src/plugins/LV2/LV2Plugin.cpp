@@ -464,7 +464,16 @@ LV2ControlPort* LV2Plugin::create_port(uint32_t portIndex, float defaultValue)
 
 QString LV2Plugin::get_name( )
 {
-	return QString(lilv_node_as_string(lilv_plugin_get_name(m_plugin)));
+    LilvNode* name = lilv_plugin_get_name(m_plugin);
+    
+    QString s_name = "";
+    if (name)
+    {
+        s_name = lilv_node_as_string(name);
+        lilv_node_free(name);
+    } 
+    
+    return s_name;
 }
 
 
@@ -551,7 +560,17 @@ float LV2ControlPort::get_default_value()
 QString LV2ControlPort::get_description()
 {
     const LilvPort* port = lilv_plugin_get_port_by_index(m_lv2plugin->get_slv2_plugin(), uint32_t(m_index));
-	return QString(lilv_node_as_string(lilv_port_get_name(m_lv2plugin->get_slv2_plugin(), port)));
+    
+    LilvNode* portName = lilv_port_get_name(m_lv2plugin->get_slv2_plugin(), port);
+    
+    QString s_portName = "";
+    if (portName)
+    {
+        s_portName = lilv_node_as_string(portName);
+        lilv_node_free(portName);
+    } 
+    
+    return s_portName;
 }
 
 QString LV2ControlPort::get_symbol()
@@ -568,6 +587,9 @@ QStringList LV2ControlPort::get_hints()
 	for (unsigned i=0; i < lilv_nodes_size(values); ++i) {
 //		qslist << QString(lilv_node_as_string(lilv_nodes_get_at(values, i)));
 	}
+        
+        lilv_nodes_free(values);
+        
 	return qslist;
 }
 
