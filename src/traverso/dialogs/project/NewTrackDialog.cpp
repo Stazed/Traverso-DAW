@@ -105,12 +105,16 @@ void NewTrackDialog::create_track()
         track->set_channel_count(channelCount);
 
 
-        TCommand* command = session->add_track(track);
+        TCommand* command = session->add_track(track);  // will call track->connect_to_jack(true, true);
         command->setText(tr("Added %1: %2").arg(track->metaObject()->className()).arg(track->get_name()));
         TCommand::process_command(command);
 
-        if (driver == "Jack") {
-                track->connect_to_jack(true, true);
+        if (driver == "Jack")
+        {
+            // This is a duplicate call to connect_to_jack(), as session->add_track() called above
+            // also calls it and adds jack ports.
+            // Thus no need to check "Jack" here and the if() else() could be removed FIXME
+            //    track->connect_to_jack(true, true);
         } else {
             AudioTrack* audioTrack = qobject_cast<AudioTrack*>(track);
             TBusTrack* busTrack = qobject_cast<TBusTrack*>(track);
