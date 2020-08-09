@@ -887,10 +887,15 @@ AudioBus* Project::create_software_audio_bus(const BusConfig& conf)
 
 void Project::remove_software_audio_bus(AudioBus *bus)
 {
-        for(uint i=0; i<bus->get_channel_count(); ++i) {
+        for(uint i=0; i<bus->get_channel_count(); ++i)
+        {
                 AudioChannel* chan = bus->get_channel(i);
                 audiodevice().remove_jack_channel(chan);
+                
+                m_softwareAudioChannels.remove(chan->get_id());
         }
+        
+        m_softwareAudioBuses.remove(bus->get_id());
 }
 
 QList<TSend*> Project::get_inputs_for_bus_track(TBusTrack *busTrack) const
