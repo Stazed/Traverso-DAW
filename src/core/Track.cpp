@@ -104,6 +104,8 @@ int Track::set_state( const QDomNode & node )
         QDomElement e = node.toElement();
 
         m_showTrackVolumeAutomation = e.attribute("showtrackvolumeautomation", 0).toInt();
+        
+        m_channelCount = e.attribute("channelcount", "2").toInt();
 
         m_sortIndex = e.attribute( "sortindex", "-1" ).toInt();
         // Sheet/Project Master tracks can have their name set before set_state() is called

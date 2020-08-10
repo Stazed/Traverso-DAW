@@ -94,6 +94,7 @@ QDomNode AudioTrack::get_state( QDomDocument doc, bool istemplate)
         node.setAttribute("numtakes", m_numtakes);
 	node.setAttribute("showclipvolumeautomation", m_showClipVolumeAutomation);
 	node.setAttribute("InputBus", m_busInName);
+        node.setAttribute("channelcount", m_channelCount);
 
 
         if (! istemplate ) {
