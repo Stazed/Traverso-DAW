@@ -319,7 +319,8 @@ void JackDriver::update_config()
 	m_isSlave = device->get_driver_property("jackslave", false).toBool();
 		
 	if (m_isSlave) {
-                jack_set_sync_callback (m_jack_client, _jack_sync_callback, this);
+//                jack_set_sync_callback (m_jack_client, _jack_sync_callback, this);
+            jack_set_sync_callback (m_jack_client,NULL, this);
 	} else {
                 jack_set_sync_callback(m_jack_client, NULL, this);
 	}
