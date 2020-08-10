@@ -136,10 +136,15 @@ int Track::set_state( const QDomNode & node )
                 QDomNode sendNode = sendsNode.firstChild();
                 while (!sendNode.isNull()) {
                         TSend* send = new TSend(this);
-                        if (send->set_state(sendNode) < 0) {
+                        if (send->set_state(sendNode) < 0)
+                        {        
+                            QString driver = audiodevice().get_driver_type();
+                            if (driver != "Jack")
+                            {
                                 // This send could not set it's state...
                                 printf("Track::set_state: Send could not properly restore it's state, moving on..\n");
-                                delete send;
+                            }
+                            delete send;
                         } else {
                                 if (send->get_type() == TSend::POSTSEND) {
                                         private_add_post_send(send);
