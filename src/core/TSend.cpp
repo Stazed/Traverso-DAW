@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include "ProjectManager.h"
 #include "Utils.h"
 #include "Track.h"
-#include <AudioDevice.h>
 
 
 TSend::TSend(Track* track)
@@ -104,15 +103,9 @@ int TSend::set_state( const QDomNode & node )
 
         m_bus = project->get_audio_bus(busId);
 
-        if (!m_bus)
-        {
-            QString driver = audiodevice().get_driver_type();
-            if (driver != "Jack")
-            {
+        if (!m_bus) {
                 printf("TSend::set_state: Project didn't return my Bus (%s)!\n", busName.toLatin1().data());
-            }
-            
-            return -1;
+                return -1;
         }
 
 
