@@ -59,8 +59,6 @@ QDomNode TBusTrack::get_state( QDomDocument doc, bool istemplate)
         QDomElement node = doc.createElement("BusTrack");
         Track::get_state(doc, node, istemplate);
 
-        node.setAttribute("channelcount", m_channelCount);
-
         return node;
 }
 

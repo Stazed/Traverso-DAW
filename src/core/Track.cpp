@@ -45,6 +45,8 @@ Track::Track(TSession* session)
 	m_preSendOn = false;
         m_inputBus = nullptr;
         m_channelCount = 2;
+        m_jackInPorts = true;
+        m_jackOutPorts = true;
 
         for (int i=0; i<2; ++i) {
                 m_vumonitors.append(new VUMonitor());
@@ -81,6 +83,10 @@ void Track::get_state(QDomDocument& doc, QDomElement& node, bool istemplate)
 	node.setAttribute("showtrackvolumeautomation", m_showTrackVolumeAutomation);
 	node.setAttribute("sortindex", m_sortIndex);
         node.setAttribute("height", m_session->get_track_height(m_id));
+        node.setAttribute("channelcount", m_channelCount);
+        node.setAttribute("channelcount", m_channelCount);
+        node.setAttribute("jackinports", m_jackInPorts);
+        node.setAttribute("jackoutports", m_jackOutPorts);
 
         QDomNode pluginChainNode = doc.createElement("PluginChain");
         pluginChainNode.appendChild(m_pluginChain->get_state(node.toDocument()));
@@ -115,6 +121,9 @@ int Track::set_state( const QDomNode & node )
         set_muted(e.attribute( "mute", "" ).toInt());
         set_solo(e.attribute( "solo", "" ).toInt());
         set_muted_by_solo(e.attribute( "mutedbysolo", "0").toInt());
+        set_jack_in_ports(e.attribute( "jackinports", "1").toInt());
+        set_jack_out_ports(e.attribute( "jackoutports", "1").toInt());
+        
         set_pan( e.attribute( "pan", "" ).toFloat() );
         m_id = e.attribute("id", "0").toLongLong();
         if (m_id == 0) {
@@ -559,7 +568,7 @@ bool Track::connect_to_jack(bool inports, bool outports)
 
                 busconfig.type = "output";
 
-                bus = project->create_software_audio_bus(busconfig);
+                bus = project->create_software_audio_bus(busconfig, m_jackOutPorts);
                 add_post_send(bus);
         }
         
@@ -576,7 +585,7 @@ bool Track::connect_to_jack(bool inports, bool outports)
 
                 busconfig.type = "input";
 
-                bus = project->create_software_audio_bus(busconfig);
+                bus = project->create_software_audio_bus(busconfig, m_jackInPorts);
                 add_input_bus(bus);
         }
 
@@ -611,4 +620,14 @@ bool Track::disconnect_from_jack(bool inports, bool outports)
 void Track::set_channel_count(int count)
 {
         m_channelCount = count;
+}
+
+void Track::set_jack_in_ports(bool set)
+{
+    m_jackInPorts = set;
+}
+
+void Track::set_jack_out_ports(bool set)
+{
+    m_jackOutPorts = set;
 }

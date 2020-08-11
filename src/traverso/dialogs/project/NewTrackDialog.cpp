@@ -103,6 +103,9 @@ void NewTrackDialog::create_track()
             channelCount = 2;
         }
         track->set_channel_count(channelCount);
+        
+        track->set_jack_in_ports(jackInPortsCheckBox->isChecked());
+        track->set_jack_out_ports(jackOutPortsCheckBox->isChecked());
 
 
         TCommand* command = session->add_track(track);  // will call track->connect_to_jack(true, true);

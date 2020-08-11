@@ -888,7 +888,7 @@ AudioBus* Project::get_audio_bus(qint64 id)
         return nullptr;
 }
 
-AudioBus* Project::create_software_audio_bus(const BusConfig& conf)
+AudioBus* Project::create_software_audio_bus(const BusConfig& conf, bool jack_channel)
 {
         AudioBus* bus = new AudioBus(conf);
 
@@ -896,8 +896,10 @@ AudioBus* Project::create_software_audio_bus(const BusConfig& conf)
         for (int i=0; i< conf.channelNames.size(); ++i) {
                 channel = new AudioChannel(conf.channelNames.at(i), uint(i), bus->get_type());
                 channel->set_buffer_size(audiodevice().get_buffer_size());
-
-                audiodevice().add_jack_channel(channel);
+                if(jack_channel)
+                {
+                    audiodevice().add_jack_channel(channel);
+                }
                 bus->add_channel(channel);
 
                 m_softwareAudioChannels.insert(channel->get_id(), channel);

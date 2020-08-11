@@ -53,6 +53,8 @@ public:
         int set_state( const QDomNode& node );
         virtual void set_name(const QString& name);
         void set_channel_count(int count);
+        void set_jack_in_ports(bool set);
+        void set_jack_out_ports(bool set);
         int get_channel_count() const {return m_channelCount;}
         int get_type() const {return m_type;}
 
@@ -95,6 +97,8 @@ protected:
         bool            m_isSolo;
 	bool		m_showTrackVolumeAutomation;
 	bool		m_preSendOn;
+        bool            m_jackInPorts;
+        bool            m_jackOutPorts;
 
         APILinkedList   m_postSends;
         APILinkedList   m_preSends;

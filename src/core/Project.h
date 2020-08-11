@@ -59,7 +59,7 @@ public :
         AudioBus* get_capture_bus(const QString& name) const;
 
         AudioBus* get_audio_bus(qint64 id);
-        AudioBus* create_software_audio_bus(const BusConfig& config);
+        AudioBus* create_software_audio_bus(const BusConfig& config, bool jack_channel = true);
         void remove_software_audio_bus(AudioBus* bus);
         QList<TSend*> get_inputs_for_bus_track(TBusTrack* busTrack) const;
         void setup_default_hardware_buses();
