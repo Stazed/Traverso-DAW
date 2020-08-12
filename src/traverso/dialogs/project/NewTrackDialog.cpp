@@ -116,7 +116,7 @@ void NewTrackDialog::create_track()
         {
             // This is a duplicate call to connect_to_jack(), as session->add_track() called above
             // also calls it and adds jack ports.
-            // Thus no need to check "Jack" here and the if() else() could be removed FIXME
+            // Thus no need to connect_to_jack(true, true); here... 
             //    track->connect_to_jack(true, true);
         } else {
             AudioTrack* audioTrack = qobject_cast<AudioTrack*>(track);

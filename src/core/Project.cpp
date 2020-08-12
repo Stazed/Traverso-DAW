@@ -286,28 +286,29 @@ int Project::load(const QString& projectfile)
         QDomNode channelsConfigNode = docElem.firstChildElement("AudioChannels");
         QDomNode channelNode = channelsConfigNode.firstChild();
 
-//        while (!channelNode.isNull()) {
-//                QDomElement e = channelNode.toElement();
-//                QString name = e.attribute("name", "");
-//                QString typeString = e.attribute("type", "");
-//                uint number = e.attribute("number", "0").toInt();
-//                qint64 id = e.attribute("id", "0").toLongLong();
+#if 1
+        while (!channelNode.isNull()) {
+                QDomElement e = channelNode.toElement();
+                QString name = e.attribute("name", "");
+                QString typeString = e.attribute("type", "");
+                uint number = e.attribute("number", "0").toInt();
+                qint64 id = e.attribute("id", "0").toLongLong();
 
-//                int type = -1;
-//                if (typeString == "input") {
-//                        type = ChannelIsInput;
-//                }
-//                if (typeString == "output") {
-//                        type = ChannelIsOutput;
-//                }
+                int type = -1;
+                if (typeString == "input") {
+                        type = ChannelIsInput;
+                }
+                if (typeString == "output") {
+                        type = ChannelIsOutput;
+                }
 
-//                AudioChannel* chan = new AudioChannel(name, number, type, id);
+                AudioChannel* chan = new AudioChannel(name, number, type, id);
 
-//                m_softwareAudioChannels.insert(chan->get_id(), chan);
+                m_softwareAudioChannels.insert(chan->get_id(), chan);
 
-//                channelNode = channelNode.nextSibling();
-//        }
-
+                channelNode = channelNode.nextSibling();
+        }
+#endif
 
         QDomNode busesConfigNode = docElem.firstChildElement("AudioBuses");
         QDomNode busNode = busesConfigNode.firstChild();
@@ -400,6 +401,15 @@ int Project::load(const QString& projectfile)
                         bus->add_channel(channel);
 
                         m_softwareAudioChannels.insert(channel->get_id(), channel);
+                    }
+                }
+                else    // have channels - need jack
+                {
+                    for (int i=0; i< Qlist.size(); ++i)
+                    {
+                        AudioChannel* channel = bus->get_channel(i);
+                        channel->set_buffer_size(audiodevice().get_buffer_size());
+                        audiodevice().add_jack_channel(channel);
                     }
                 }
             }
@@ -614,7 +624,14 @@ QDomNode Project::get_state(QDomDocument doc, bool istemplate)
         buses.append(m_hardwareAudioBuses);
         buses.append(m_softwareAudioBuses.values());
 
-        foreach(AudioBus* bus, buses) {
+        foreach(AudioBus* bus, buses)
+        {
+#if 0
+                if(bus->get_channel_names().empty())
+                {
+                    continue;   // don't save buses with no channels
+                }
+#endif
                 QDomElement busElement = doc.createElement("Bus");
                 busElement.setAttribute("name", bus->get_name());
                 busElement.setAttribute("channels", bus->get_channel_names().join(";"));

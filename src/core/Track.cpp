@@ -533,20 +533,20 @@ TSend* Track::get_send(qint64 sendId)
 
 bool Track::connect_to_jack(bool inports, bool outports)
 {
-
         QString driver = audiodevice().get_driver_type();
-        if (driver != "Jack") {
+        if (driver != "Jack")
+        {
 //                PERROR("Can't connect this Track (%s) to jack if jack isn't used as driver", QS_C(m_name));
-                return false;
+            return false;
         }
 
-        if (m_channelCount == 0) {
-                PERROR("Channel count == 0");
-                return false;
+        if (m_channelCount == 0)
+        {
+            PERROR("Channel count == 0");
+            return false;
         }
 
         Project* project = pm().get_project();
-        AudioBus* bus = 0;
 
         BusConfig busconfig;
         busconfig.channelcount = m_channelCount;
@@ -554,34 +554,151 @@ bool Track::connect_to_jack(bool inports, bool outports)
 
         ChannelConfig channelconfig;
 
-        if (outports) {
-                for (int chan=0; chan<m_channelCount; ++chan) {
-            channelconfig.name = m_name + " : " + QString("%1 : out").arg(chan);
-                        channelconfig.type = "output";
-                        busconfig.channelNames << channelconfig.name;
+        if (outports)
+        {
+#if 1
+            // For file loading - check for existing send and bus and use them
+            bool haveBusAndSend = false;
+            QList<TSend* > allSends = get_post_sends();
+
+            AudioBus* trackBus = 0;
+            QStringList channelNames;
+
+            foreach(TSend* item, allSends)
+            {
+                if(item->get_name() == m_name && item->get_type() == 1) // POSTSEND = 1
+                {
+                    trackBus = item->get_bus();
+                    
+                    if(trackBus)
+                    {
+                        haveBusAndSend = true;
+                        channelNames = trackBus->get_channel_names();
+                        break;
+                    }
+                }
+            }
+
+            if(haveBusAndSend)
+            {
+                //printf("haveBusAndSend = %s\n", QS_C(m_name));
+                if(m_jackOutPorts)  // Does user want jack out ports
+                {
+                    for (int i=0; i< channelNames.size(); ++i)
+                    {
+                        AudioChannel* channel = trackBus->get_channel(i);
+                        channel->set_buffer_size(audiodevice().get_buffer_size());
+                        audiodevice().add_jack_channel(channel);
+                    }
+                }
+            }
+            else    // New track creation - must create bus and send
+            {
+                //printf("NO BusAndSend = %s\n", QS_C(m_name));
+                for (int chan=0; chan<m_channelCount; ++chan)
+                {
+                    channelconfig.name = m_name + " : " + QString("%1 : out").arg(chan);
+                    channelconfig.type = "output";
+                    busconfig.channelNames << channelconfig.name;
                 }
 
                 busconfig.type = "output";
+                
+                AudioBus* bus = project->create_software_audio_bus(busconfig, m_jackOutPorts);
+                add_post_send(bus);   // Add the send here - connected to jack if requested
+            }
 
-                bus = project->create_software_audio_bus(busconfig, m_jackOutPorts);
-                add_post_send(bus);
+#else
+            QList<TSend* > allSends = get_post_sends();
+            
+            foreach(TSend* item, allSends)
+            {
+                if(item->get_name() == m_name && item->get_type() == 1) // POSTSEND = 1
+                {
+                    remove_post_send(item);
+                }
+                else
+                {
+                    if(!item->get_bus()->is_valid())
+                    {
+                        printf("Invalid Send Bus = %s\n", QS_C(item->get_name()));
+                    }
+                }
+            }
+            
+
+            for (int chan=0; chan<m_channelCount; ++chan)
+            {
+                channelconfig.name = m_name + " : " + QString("%1 : out").arg(chan);
+                channelconfig.type = "output";
+                busconfig.channelNames << channelconfig.name;
+            }
+
+            busconfig.type = "output";
+
+            AudioBus* bus = project->create_software_audio_bus(busconfig, m_jackOutPorts);
+            add_post_send(bus);   // Add the send here - connected to jack if requested
+#endif
         }
-        
-        // Gotta clear the output names since the for() loop appends the names and will add
-        // them to the input bus
-        busconfig.channelNames.clear();
 
-        if (inports) {
-                for (int chan=0; chan<m_channelCount; ++chan) {
-            channelconfig.name = m_name + " : " + QString("%1 : in").arg(chan);
-                        channelconfig.type = "input";
-                        busconfig.channelNames << channelconfig.name;
+        if (inports)
+        {
+#if 1
+            // For file loading - check for existing bus and use it
+            AudioBus* inputBus = project->get_capture_bus(m_name);
+
+            if(inputBus)
+            {
+                //printf("Have input Bus = %s\n", QS_C(m_name));
+                QStringList channelNames = inputBus->get_channel_names();
+                
+                if(m_jackInPorts)   // Does user want jack in ports
+                {
+                    for (int i=0; i< channelNames.size(); ++i)
+                    {
+                        AudioChannel* channel = inputBus->get_channel(i);
+                        channel->set_buffer_size(audiodevice().get_buffer_size());
+                        audiodevice().add_jack_channel(channel);
+                    }
+                }
+                add_input_bus(inputBus);    // Add bus to this track
+            }
+            else    // New track creation - must create bus
+            {
+                // Gotta clear the output names since the for() loop appends the names and will add
+                // them to the input bus
+                busconfig.channelNames.clear();
+                //printf("NO input Bus = %s\n", QS_C(m_name));
+                
+                for (int chan=0; chan<m_channelCount; ++chan)
+                {
+                    channelconfig.name = m_name + " : " + QString("%1 : in").arg(chan);
+                    channelconfig.type = "input";
+                    busconfig.channelNames << channelconfig.name;
                 }
 
                 busconfig.type = "input";
+                
+                AudioBus* bus = project->create_software_audio_bus(busconfig, m_jackInPorts);
+                add_input_bus(bus);         // Add bus to this track
+            }
+#else
+            // Gotta clear the output names since the for() loop appends the names and will add
+            // them to the input bus
+            busconfig.channelNames.clear();
 
-                bus = project->create_software_audio_bus(busconfig, m_jackInPorts);
-                add_input_bus(bus);
+            for (int chan=0; chan<m_channelCount; ++chan)
+            {
+                channelconfig.name = m_name + " : " + QString("%1 : in").arg(chan);
+                channelconfig.type = "input";
+                busconfig.channelNames << channelconfig.name;
+            }
+
+            busconfig.type = "input";
+
+            AudioBus* bus = project->create_software_audio_bus(busconfig, m_jackInPorts);
+            add_input_bus(bus);         // Add bus to this track
+#endif
         }
 
 
