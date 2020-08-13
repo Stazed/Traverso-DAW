@@ -743,3 +743,13 @@ void Track::set_jack_out_ports(bool set)
 {
     m_jackOutPorts = set;
 }
+
+bool Track::get_jack_in_ports()
+{
+    return m_jackInPorts;
+}
+
+bool Track::get_jack_out_ports()
+{
+    return m_jackOutPorts;
+}

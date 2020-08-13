@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>897</width>
-    <height>461</height>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -97,6 +97,32 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
+      <widget class="QCheckBox" name="jackInPortsCheckBox">
+       <property name="toolTip">
+        <string>Requires Project Restart</string>
+       </property>
+       <property name="text">
+        <string>Jack In Ports</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="jackOutPortsCheckBox">
+       <property name="toolTip">
+        <string>Requires Project Restart</string>
+       </property>
+       <property name="text">
+        <string>Jack Out Ports</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer_10">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -106,7 +132,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>300</width>
+         <width>50</width>
          <height>20</height>
         </size>
        </property>
@@ -167,7 +193,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>150</width>
+         <width>50</width>
          <height>20</height>
         </size>
        </property>

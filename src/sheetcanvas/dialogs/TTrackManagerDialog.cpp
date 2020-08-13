@@ -58,6 +58,9 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
 
         update_routing_input_output_widget_view();
         update_pre_post_fader_plugins_widget_view();
+        
+        jackInPortsCheckBox->setChecked(m_track->get_jack_in_ports());
+        jackOutPortsCheckBox->setChecked(m_track->get_jack_out_ports());
 
         trackPanSlider->setValue(int(m_track->get_pan() * 64));
         trackGainSlider->setValue(int(coefficient_to_dB(m_track->get_gain()) * 10.f));
@@ -271,6 +274,8 @@ void TTrackManagerDialog::accept()
         QDialog::accept();
 
         m_track->set_name(nameLineEdit->text());
+        m_track->set_jack_in_ports(jackInPortsCheckBox->isChecked());
+        m_track->set_jack_out_ports(jackOutPortsCheckBox->isChecked());
 }
 
 void TTrackManagerDialog::reject()

@@ -55,6 +55,8 @@ public:
         void set_channel_count(int count);
         void set_jack_in_ports(bool set);
         void set_jack_out_ports(bool set);
+        bool get_jack_in_ports();
+        bool get_jack_out_ports();
         int get_channel_count() const {return m_channelCount;}
         int get_type() const {return m_type;}
 
