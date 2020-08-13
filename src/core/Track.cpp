@@ -559,14 +559,14 @@ bool Track::connect_to_jack(bool inports, bool outports)
 #if 1
             // For file loading - check for existing send and bus and use them
             bool haveBusAndSend = false;
-            QList<TSend* > allSends = get_post_sends();
+            QList<TSend* > allPostSends = get_post_sends();
 
             AudioBus* trackBus = 0;
             QStringList channelNames;
 
-            foreach(TSend* item, allSends)
+            foreach(TSend* item, allPostSends)
             {
-                if(item->get_name() == m_name && item->get_type() == 1) // POSTSEND = 1
+                if(item->get_name() == m_name)
                 {
                     trackBus = item->get_bus();
                     
