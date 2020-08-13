@@ -201,11 +201,15 @@ void NewTrackDialog::update_buses_comboboxes()
         }
 
         if (isBusTrack->isChecked()) {
+                // BusTracks cannot record so set jack in to false and hide box
                 jackInPortsCheckBox->setChecked(false);
+                jackInPortsCheckBox->hide();
                 routingInputListWidget->setSelectionMode(QAbstractItemView::SelectionMode::MultiSelection);
         } else {
                 routingInputListWidget->setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
                 jackInPortsCheckBox->setChecked(true);
+                // In case they previously checked isBusTrack above.
+                jackInPortsCheckBox->show();
         }
 
         QListWidgetItem* item = new QListWidgetItem(routingOutputListWidget);

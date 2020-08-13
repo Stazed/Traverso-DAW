@@ -61,7 +61,7 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
         
         jackInPortsCheckBox->setChecked(m_track->get_jack_in_ports());
         jackOutPortsCheckBox->setChecked(m_track->get_jack_out_ports());
-
+        
         trackPanSlider->setValue(int(m_track->get_pan() * 64));
         trackGainSlider->setValue(int(coefficient_to_dB(m_track->get_gain()) * 10.f));
 
@@ -90,6 +90,16 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
                 // Master Buses are not allowed to be renamed to avoid confusion
                 nameLineEdit->setEnabled(false);
                 trackLabel->setText(tr("Master Bus:"));
+                // Hide the jack boxes since these are hard coded for master
+                jackInPortsCheckBox->hide();
+                jackOutPortsCheckBox->hide();     
+        }
+        
+        TBusTrack* bustrack = qobject_cast<TBusTrack*>(m_track);
+        if (bustrack)
+        {
+            // BusTracks cannot record so hide jack in.
+            jackInPortsCheckBox->hide();
         }
 
         connect(m_track, SIGNAL(panChanged()), this, SLOT(update_pan_indicator()));
