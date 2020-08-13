@@ -114,6 +114,7 @@ protected:
 
 private:
         void process_send(TSend* send, nframes_t nframes);
+        void cleanup_track_rename();
 
 public slots:
         TCommand* solo();
