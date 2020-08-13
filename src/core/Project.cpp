@@ -609,7 +609,15 @@ QDomNode Project::get_state(QDomDocument doc, bool istemplate)
 
         QDomElement channelsElement = doc.createElement("AudioChannels");
 
-        foreach(AudioChannel* channel, m_softwareAudioChannels) {
+        foreach(AudioChannel* channel, m_softwareAudioChannels)
+        {
+                // Don't save renamed channels
+                // These will be recreated from the track info on load
+                if(channel->is_renamed())
+                {
+                    continue;
+                }
+            
                 QDomElement chanElement = doc.createElement("Channel");
                 chanElement.setAttribute("name", channel->get_name());
                 chanElement.setAttribute("type", channel->get_type() == ChannelIsInput ? "input" : "output");
@@ -626,6 +634,12 @@ QDomNode Project::get_state(QDomDocument doc, bool istemplate)
 
         foreach(AudioBus* bus, buses)
         {
+                // Don't save renamed buses
+                // These will be recreated from the track info on load
+                if(bus->is_renamed())
+                {
+                    continue;
+                }
 #if 0
                 if(bus->get_channel_names().empty())
                 {

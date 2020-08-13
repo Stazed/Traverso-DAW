@@ -49,6 +49,7 @@ $Id: AudioBus.cpp,v 1.11 2008/01/21 16:22:15 r_sijrier Exp $
 AudioBus::AudioBus(const BusConfig& config)
 {
         m_isMonitoring = true;
+        m_isRenamed = false;
 
         m_channelCount = 0;
         m_name = config.name;

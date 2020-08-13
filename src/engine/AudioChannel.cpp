@@ -50,6 +50,7 @@ AudioChannel::AudioChannel(const QString& name, uint channelNumber, int type, qi
         m_number = channelNumber;
         m_type = type;
         m_monitoring = true;
+        m_isRenamed = false;
         m_bufferSize = 0;
         m_buffer = QVarLengthArray<audio_sample_t>(2048);
         mlocked = false;

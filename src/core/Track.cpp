@@ -247,6 +247,55 @@ void Track::set_sort_index( int index )
 
 void Track::set_name( const QString & name )
 {
+        // Was track renamed
+        if(m_name != name)
+        {
+            // On name change The <AudioChannels> and <AudioBuses>
+            // must be removed from saving to project.tpf
+            // so we set a renamed flag to ignore on save
+            
+            AudioBus* trackOutBus = 0;
+            QStringList channelNames;
+            QList<TSend* > allPostSends = get_post_sends();
+
+            foreach(TSend* item, allPostSends)
+            {
+                if(item->get_name() == m_name)
+                {
+                    trackOutBus = item->get_bus();
+                            
+                    if(trackOutBus)
+                    {
+                        trackOutBus->set_renamed();
+                        channelNames = trackOutBus->get_channel_names();
+                        for (int i=0; i< channelNames.size(); ++i)
+                        {
+                            AudioChannel* channel = trackOutBus->get_channel(i);
+                            channel->set_renamed();
+                        }
+                    }
+                        
+                    break;
+                }
+            }
+            
+            AudioBus* trackInBus = 0;
+            channelNames.clear();
+            
+            trackInBus = get_input_bus();
+            
+            if(trackInBus)
+            {
+                trackInBus->set_renamed();
+                channelNames = trackInBus->get_channel_names();
+                for (int i=0; i< channelNames.size(); ++i)
+                {
+                    AudioChannel* channel = trackInBus->get_channel(i);
+                    channel->set_renamed();
+                }
+            }
+        }
+    
         TAudioProcessingNode::set_name(name);
 
         // 'broadcast' our name change

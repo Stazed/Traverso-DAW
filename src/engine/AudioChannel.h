@@ -86,6 +86,8 @@ public:
 
     void set_buffer_size(nframes_t size);
     void set_monitoring(bool monitor);
+    bool is_renamed() {return m_isRenamed;}
+    void set_renamed(){m_isRenamed = true;}
     void process_monitoring(VUMonitor* monitor=nullptr);
 
     void add_monitor(VUMonitor* monitor);
@@ -107,6 +109,7 @@ private:
     int                     m_type;
     bool			mlocked;
     bool			m_monitoring;
+    bool                m_isRenamed;
     QString 		m_name;
 
     friend class JackDriver;

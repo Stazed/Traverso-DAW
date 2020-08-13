@@ -64,6 +64,8 @@ public:
         bool is_input() {return m_type == ChannelIsInput;}
         bool is_output() {return m_type == ChannelIsOutput;}
         bool is_valid() const;
+        bool is_renamed() {return m_isRenamed;}
+        void set_renamed(){m_isRenamed = true;}
         int get_type() const {return m_type;}
         int get_bus_type() const {return m_busType;}
         qint64 get_id() const {return m_id;}
@@ -102,6 +104,7 @@ private:
 	
         bool            		m_isMonitoring;
         bool                    m_isInternalBus;
+        bool                    m_isRenamed;
         uint         			m_channelCount;
         int                     m_type;
         int                     m_busType;
