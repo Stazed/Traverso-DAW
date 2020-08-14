@@ -112,13 +112,15 @@ void NewTrackDialog::create_track()
         command->setText(tr("Added %1: %2").arg(track->metaObject()->className()).arg(track->get_name()));
         TCommand::process_command(command);
 
-        if (driver == "Jack")
-        {
+    //    if (driver == "Jack")
+    //    {
             // This is a duplicate call to connect_to_jack(), as session->add_track() called above
             // also calls it and adds jack ports.
             // Thus no need to connect_to_jack(true, true); here... 
             //    track->connect_to_jack(true, true);
-        } else {
+    //    } else
+        
+        {
             AudioTrack* audioTrack = qobject_cast<AudioTrack*>(track);
             TBusTrack* busTrack = qobject_cast<TBusTrack*>(track);
 
