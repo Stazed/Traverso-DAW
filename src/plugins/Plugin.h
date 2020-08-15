@@ -74,6 +74,8 @@ public:
     TSession* get_session() const {return m_session;}
     bool is_bypassed() const {return m_bypass;}
     bool is_LV2() const {return m_isLV2;}
+    void set_prefader(bool set){m_preFader = set;}
+    bool is_prefader(){return m_preFader;}
 
     void automate_port(int index, bool automate);
     void set_sliders(QList<PluginSlider*> sliders) {m_sliders = sliders; }
@@ -93,6 +95,7 @@ protected:
 
     bool	m_bypass;
     bool        m_isLV2;
+    bool        m_preFader;
     
     // Default preset name.
     static QString g_DefaultPreset;

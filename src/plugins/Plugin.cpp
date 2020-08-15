@@ -37,6 +37,7 @@ Plugin::Plugin(TSession* session)
 {
     m_bypass = false;
     m_isLV2 = false;
+    m_preFader = false;
 }
 
 bool Plugin::is_smaller_then(APILinkedListNode *node)
@@ -49,6 +50,7 @@ QDomNode Plugin::get_state(QDomDocument doc)
 	QDomElement node = doc.createElement("Plugin");
 	
 	node.setAttribute("bypassed", is_bypassed());
+        node.setAttribute("prefader", is_prefader());
 	
 	QDomNode controlPortsNode = doc.createElement("ControlPorts");
 	foreach(PluginControlPort* port, m_controlPorts) {
@@ -81,6 +83,7 @@ int Plugin::set_state(const QDomNode & node)
 	QDomElement e = node.toElement();
 	
 	m_bypass = e.attribute( "bypassed", "0").toInt();
+        m_preFader = e.attribute( "prefader", "0").toInt();
 
 	return 1;
 }

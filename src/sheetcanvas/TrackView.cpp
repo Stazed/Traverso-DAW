@@ -148,7 +148,11 @@ TCommand* TrackView::add_new_plugin( )
 
         if (PluginSelectorDialog::instance()->exec() == QDialog::Accepted) {
                 Plugin* plugin = PluginSelectorDialog::instance()->get_selected_plugin();
-                if (plugin) {
+                if (plugin)
+                {
+                    // Is this a pre fader request?
+                    plugin->set_prefader(m_track->presend_on());
+                    
                     return m_track->add_plugin(plugin);
                 }
         }

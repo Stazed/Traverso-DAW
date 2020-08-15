@@ -51,11 +51,12 @@ public:
 	APILinkedListNode* first() const {return m_head;}
 	APILinkedListNode* last() const {return m_last;}
 	int size() const {return m_size;}
-    void clear() {m_head = nullptr; m_last = nullptr; m_size=0;}
+        void clear() {m_head = nullptr; m_last = nullptr; m_size=0;}
 	void sort(APILinkedListNode* node);
 	bool isEmpty() {return m_size == 0 ? true : false;}
 	int indexOf(APILinkedListNode* node);
 	APILinkedListNode* at(int i);
+        void insert(APILinkedListNode* after, APILinkedListNode* item);
 
 private:
 	int m_size;
@@ -63,7 +64,6 @@ private:
 	APILinkedListNode* m_last;
 	APILinkedListNode* slow_last() const;
 
-	void insert(APILinkedListNode* after, APILinkedListNode* item);
 };
 
 // T = O(1)

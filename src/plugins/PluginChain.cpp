@@ -125,7 +125,25 @@ TCommand* PluginChain::remove_plugin(Plugin* plugin, bool historable)
 
 void PluginChain::private_add_plugin( Plugin * plugin )
 {
-    m_rtPlugins.append(plugin);
+    if(plugin->is_prefader())
+    {
+        int faderIndex = m_rtPlugins.indexOf(m_fader);
+        
+        if(faderIndex <= 0)
+        {
+            // insert before m_fader
+            m_rtPlugins.prepend(plugin);
+        }
+        else
+        {
+            // insert after last prefader plugin
+            m_rtPlugins.insert(m_rtPlugins.at(faderIndex - 1), plugin);
+        }
+    }
+    else
+    {
+        m_rtPlugins.append(plugin);
+    }
 }
 
 
@@ -138,7 +156,28 @@ void PluginChain::private_remove_plugin( Plugin * plugin )
 
 void PluginChain::private_plugin_added(Plugin *plugin)
 {
-    m_plugins.append(plugin);
+    if(plugin->is_prefader())
+    {
+        printf("plugin->get_prefader()\n");
+        int faderIndex = m_plugins.indexOf(m_fader);
+        
+        if(faderIndex <= 0)
+        {
+            // insert at beginning
+            m_plugins.prepend(plugin);
+        }
+        else
+        {
+            // insert before prefader plugin
+            m_plugins.insert(faderIndex, plugin);
+        }
+    }
+    else
+    {
+        m_plugins.append(plugin);
+    }
+    
+    
     emit pluginAdded(plugin);
 }
 
