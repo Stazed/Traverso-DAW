@@ -50,7 +50,8 @@ private:
         void create_routing_output_menu();
         void create_pre_sends_menu();
         QMenu* create_sends_menu();
-
+        
+        void add_new_plugin(bool preFader);
 
 private slots:
         void update_routing_input_output_widget_view();
@@ -64,6 +65,9 @@ private slots:
         void routingOutputMenuActionTriggered(QAction* action);
         void preSendsMenuActionTriggered(QAction* action);
 
+        void on_pluginsAddNewButton_2_clicked();
+        void on_pluginsAddNewButton_clicked();
+        
         void on_routingOutputRemoveButton_clicked();
         void on_preSendsRemoveButton_clicked();
         void on_pluginsRemoveButton_2_clicked();

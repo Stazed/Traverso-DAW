@@ -36,6 +36,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include "Themer.h"
 #include "TMainWindow.h"
 #include "TCommand.h"
+#include <PluginSelectorDialog.h>
 
 #include <QMenu>
 
@@ -406,6 +407,39 @@ void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view()
             item->setText(plugin->get_name());
             item->setData(Qt::UserRole, plugin->get_id());
     }
+}
+
+void TTrackManagerDialog::on_pluginsAddNewButton_2_clicked()
+{
+    // true for preFader
+    add_new_plugin(true);
+}
+
+// Post fader plugins
+void TTrackManagerDialog::on_pluginsAddNewButton_clicked()
+{
+    // false - not preFader
+    add_new_plugin(false);
+}
+
+void TTrackManagerDialog::add_new_plugin(bool preFader)
+{
+    PluginSelectorDialog::instance()->set_description(tr("Track %1:  %2")
+                    .arg(m_track->get_sort_index()+1).arg(m_track->get_name()));
+
+    if (PluginSelectorDialog::instance()->exec() == QDialog::Accepted)
+    {
+        Plugin* plugin = PluginSelectorDialog::instance()->get_selected_plugin();
+        if (plugin)
+        {
+            // Set pre-fader status
+            plugin->set_prefader(preFader);
+
+            TCommand::process_command(m_track->add_plugin(plugin));
+        }
+    }
+    
+    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_routingInputRemoveButton_clicked()
