@@ -465,6 +465,25 @@ void TTrackManagerDialog::on_pluginsRemoveButton_2_clicked()
     update_pre_post_fader_plugins_widget_view();
 }
 
+void TTrackManagerDialog::on_pluginsRemoveButton_clicked()
+{
+    QList<QListWidgetItem*> selectedItems = postFaderPluginsListWidget->selectedItems();
+    QList<Plugin*> postFaderPlugins = m_track->get_plugin_chain()->get_post_fader_plugins();
+    foreach(QListWidgetItem* item, selectedItems)
+    {
+        QString name = item->text();
+
+        foreach(Plugin* plugin, postFaderPlugins)
+        {
+            if(plugin->get_name() == name)
+            {
+                TCommand::process_command(m_track->remove_plugin(plugin));
+            }
+        }
+    }
+    update_pre_post_fader_plugins_widget_view();
+}
+
 void TTrackManagerDialog::on_routingOutputRemoveButton_clicked()
 {
         QList<QListWidgetItem*> selectedItems = routingOutputListWidget->selectedItems();

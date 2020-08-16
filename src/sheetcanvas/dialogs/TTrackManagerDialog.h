@@ -67,6 +67,7 @@ private slots:
         void on_routingOutputRemoveButton_clicked();
         void on_preSendsRemoveButton_clicked();
         void on_pluginsRemoveButton_2_clicked();
+        void on_pluginsRemoveButton_clicked();
         void on_routingInputRemoveButton_clicked();
 
         void on_muteButton_clicked();
