@@ -117,7 +117,9 @@ TCommand* TAudioProcessingNode::add_plugin( Plugin * plugin )
 
 TCommand* TAudioProcessingNode::remove_plugin( Plugin * plugin )
 {
-        return m_pluginChain->remove_plugin(plugin);
+    TCommand * command = m_pluginChain->remove_plugin(plugin);
+    emit m_pluginChain->privatePluginRemoved(plugin);
+    return command;
 }
 
 

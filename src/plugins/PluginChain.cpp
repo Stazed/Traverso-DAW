@@ -158,7 +158,6 @@ void PluginChain::private_plugin_added(Plugin *plugin)
 {
     if(plugin->is_prefader())
     {
-        printf("plugin->get_prefader()\n");
         int faderIndex = m_plugins.indexOf(m_fader);
         
         if(faderIndex <= 0)

@@ -445,6 +445,24 @@ void TTrackManagerDialog::on_preSendsRemoveButton_clicked()
         m_track->remove_pre_sends(toBeRemoved);
 }
 
+void TTrackManagerDialog::on_pluginsRemoveButton_2_clicked()
+{
+    QList<QListWidgetItem*> selectedItems = preFaderPluginsListWidget->selectedItems();
+    QList<Plugin*> preFaderPlugins = m_track->get_plugin_chain()->get_pre_fader_plugins();
+    foreach(QListWidgetItem* item, selectedItems)
+    {
+        qint64 id =  item->data(Qt::UserRole).toLongLong();
+
+        foreach(Plugin* plugin, preFaderPlugins)
+        {
+            if(plugin->get_id() == id)
+            {
+                m_track->remove_plugin(plugin);
+            }
+        }
+    }
+}
+
 void TTrackManagerDialog::on_routingOutputRemoveButton_clicked()
 {
         QList<QListWidgetItem*> selectedItems = routingOutputListWidget->selectedItems();
