@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include "TSend.h"
 #include "Themer.h"
 #include "TMainWindow.h"
+#include "TCommand.h"
 
 #include <QMenu>
 
@@ -451,16 +452,17 @@ void TTrackManagerDialog::on_pluginsRemoveButton_2_clicked()
     QList<Plugin*> preFaderPlugins = m_track->get_plugin_chain()->get_pre_fader_plugins();
     foreach(QListWidgetItem* item, selectedItems)
     {
-        qint64 id =  item->data(Qt::UserRole).toLongLong();
+        QString name = item->text();
 
         foreach(Plugin* plugin, preFaderPlugins)
         {
-            if(plugin->get_id() == id)
+            if(plugin->get_name() == name)
             {
-                m_track->remove_plugin(plugin);
+                TCommand::process_command(m_track->remove_plugin(plugin));
             }
         }
     }
+    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_routingOutputRemoveButton_clicked()
