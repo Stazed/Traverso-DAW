@@ -26,6 +26,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 
 #include <QDialog>
 
+class PluginPropertiesDialog;
+class Plugin;
 class Track;
 class TSend;
 class QMenu;
@@ -45,12 +47,15 @@ private:
         QMenu*  m_preSendsMenu;
         TSend*  m_selectedPreSend;
         TSend*  m_selectedPostSend;
+        
+        PluginPropertiesDialog* m_propertiesDialog;
 
         void create_routing_input_menu();
         void create_routing_output_menu();
         void create_pre_sends_menu();
         QMenu* create_sends_menu();
         
+        void edit_plugin_properties(Plugin *plugin);
         void add_new_plugin(bool preFader);
 
 private slots:
@@ -64,6 +69,9 @@ private slots:
         void routingInputMenuActionTriggered(QAction* action);
         void routingOutputMenuActionTriggered(QAction* action);
         void preSendsMenuActionTriggered(QAction* action);
+
+        void on_prePluginsEditButton_clicked();
+        void on_postPluginsEditButton_clicked();
 
         void on_pluginsAddNewButton_2_clicked();
         void on_pluginsAddNewButton_clicked();

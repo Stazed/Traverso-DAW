@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include "TMainWindow.h"
 #include "TCommand.h"
 #include <PluginSelectorDialog.h>
+#include <PluginPropertiesDialog.h>
 
 #include <QMenu>
 
@@ -46,6 +47,7 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
         : QDialog(parent)
         , m_track(track)
 {
+        m_propertiesDialog = nullptr;
         setupUi(this);
         setAttribute(Qt::WA_DeleteOnClose);
 
@@ -129,6 +131,7 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
 TTrackManagerDialog::~TTrackManagerDialog()
 {
     PENTERDES;
+    delete m_propertiesDialog;
 }
 
 void TTrackManagerDialog::create_routing_input_menu()
@@ -407,6 +410,58 @@ void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view()
             item->setText(plugin->get_name());
             item->setData(Qt::UserRole, plugin->get_id());
     }
+}
+
+void TTrackManagerDialog::on_prePluginsEditButton_clicked()
+{
+    QList<QListWidgetItem*> selectedItems = preFaderPluginsListWidget->selectedItems();
+    QList<Plugin*> preFaderPlugins = m_track->get_plugin_chain()->get_pre_fader_plugins();
+    foreach(QListWidgetItem* item, selectedItems)
+    {
+        QString name = item->text();
+
+        foreach(Plugin* plugin, preFaderPlugins)
+        {
+            if(plugin->get_name() == name)
+            {
+                edit_plugin_properties(plugin);
+                break;
+            }
+        }
+    }
+}
+
+void TTrackManagerDialog::on_postPluginsEditButton_clicked()
+{
+    QList<QListWidgetItem*> selectedItems = postFaderPluginsListWidget->selectedItems();
+    QList<Plugin*> postFaderPlugins = m_track->get_plugin_chain()->get_post_fader_plugins();
+    foreach(QListWidgetItem* item, selectedItems)
+    {
+        QString name = item->text();
+
+        foreach(Plugin* plugin, postFaderPlugins)
+        {
+            if(plugin->get_name() == name)
+            {
+                edit_plugin_properties(plugin);
+                break;
+            }
+        }
+    }
+}
+
+void TTrackManagerDialog::edit_plugin_properties(Plugin *plugin)
+{
+    if(m_propertiesDialog)
+    {
+        delete m_propertiesDialog;
+    }
+    
+    m_propertiesDialog = new PluginPropertiesDialog(TMainWindow::instance(), plugin);
+    m_propertiesDialog->setWindowTitle(plugin->get_name());
+
+    m_propertiesDialog->setModal(true);
+    m_propertiesDialog->show();
 }
 
 void TTrackManagerDialog::on_pluginsAddNewButton_2_clicked()
