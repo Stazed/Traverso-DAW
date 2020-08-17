@@ -57,6 +57,7 @@ public:
 	int indexOf(APILinkedListNode* node);
 	APILinkedListNode* at(int i);
         void insert(APILinkedListNode* after, APILinkedListNode* item);
+        void swap(APILinkedListNode* first, APILinkedListNode* second);
 
 private:
 	int m_size;
@@ -158,6 +159,73 @@ inline void APILinkedList::insert(APILinkedListNode* after, APILinkedListNode* i
 	
 	Q_ASSERT(m_last == slow_last());
 }
+
+inline void APILinkedList::swap(APILinkedListNode* first, APILinkedListNode* second)
+{
+    Q_ASSERT(first);
+    Q_ASSERT(second);
+    
+    // Nothing to do if x and y are same  
+    if (first == second) return;  
+
+    // Search for x (keep track of prevX and CurrX  
+    APILinkedListNode *prevX = NULL, *currX = m_head;  
+    while (currX && currX != first)  
+    {  
+        prevX = currX;  
+        currX = currX->next;  
+    }  
+
+    // Search for y (keep track of prevY and CurrY  
+    APILinkedListNode *prevY = NULL, *currY = m_head;  
+    while (currY && currY != second)  
+    {  
+        prevY = currY;  
+        currY = currY->next;  
+    }  
+
+    // If either x or y is not present, nothing to do  
+    if (currX == NULL || currY == NULL)  
+        return;  
+
+    // If x is not head of linked list  
+    if (prevX != NULL)
+    {
+        prevX->next = currY;
+    }
+    else // Else make y as new head
+    {
+        m_head = currY;
+    }
+
+    // If y is not head of linked list  
+    if (prevY != NULL)
+    {
+        prevY->next = currX;
+    }
+    else // Else make x as new head
+    {
+        m_head = currX;
+    }
+
+    // Swap next pointers  
+    APILinkedListNode *temp = currY->next;  
+    currY->next = currX->next;  
+    currX->next = temp;
+    
+    if(!currX->next)
+    {
+        m_last = currX;
+    }
+    
+    if(!currY->next)
+    {
+        m_last = currY;
+    }
+    
+    Q_ASSERT(m_last == slow_last());
+}  
+
 
 // T = O(n)
 inline APILinkedListNode * APILinkedList::slow_last() const

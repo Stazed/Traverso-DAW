@@ -166,10 +166,27 @@ void PluginChain::private_remove_plugin( Plugin * plugin )
 
 void PluginChain::private_change_plugin_order( Plugin * plugin )
 {
-    printf("private_change_plugin_order = %s\n", QS_C(plugin->get_name()));
-
-    //m_rtPlugins.swap()
-
+    int first = m_rtPlugins.indexOf(plugin);
+    int second = 0;
+    int size = m_rtPlugins.size();
+    
+    if(plugin->is_reorder_up())
+    {
+        second = first - 1;
+        
+        if(second < 0)
+            return;     // we are already at the beginning
+    }
+    else
+    {
+        second = first + 1;
+        
+        if(second >= size)
+            return;     // we are already at the end
+    }
+    
+    // do the swap
+    m_rtPlugins.swap(m_rtPlugins.at(first), m_rtPlugins.at(second));
 }
 
 void PluginChain::private_plugin_order_changed( Plugin * plugin )
