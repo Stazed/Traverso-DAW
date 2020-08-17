@@ -120,6 +120,10 @@ TCommand* TAudioProcessingNode::remove_plugin( Plugin * plugin )
     return m_pluginChain->remove_plugin(plugin);
 }
 
+TCommand* TAudioProcessingNode::change_plugin_order( Plugin * plugin)
+{
+    return m_pluginChain->change_plugin_order(plugin);
+}
 
 void TAudioProcessingNode::set_gain_animated(float newGain)
 {

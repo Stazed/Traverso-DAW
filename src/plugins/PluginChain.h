@@ -45,6 +45,7 @@ public:
 
     TCommand* add_plugin(Plugin* plugin, bool historable=true);
     TCommand* remove_plugin(Plugin* plugin, bool historable=true);
+    TCommand* change_plugin_order(Plugin* plugin, bool historable=false);
     void process_pre_fader(AudioBus* bus, nframes_t nframes);
     int process_post_fader(AudioBus* bus, nframes_t nframes);
 
@@ -66,12 +67,18 @@ private slots:
     void private_remove_plugin(Plugin* plugin);
     void private_plugin_added(Plugin* plugin);
     void private_plugin_removed(Plugin* plugin);
+    void private_change_plugin_order(Plugin* plugin);
+    void private_reverse_plugin_change(Plugin* plugin);
+    void private_plugin_order_changed(Plugin* plugin);
+    void private_plugin_reverse_change(Plugin* plugin);
 
 signals:
     void pluginAdded(Plugin* plugin);
     void pluginRemoved(Plugin* plugin);
     void privatePluginRemoved(Plugin*);
     void privatePluginAdded(Plugin*);
+    void privatePluginOrderChanged(Plugin*);
+    void privatePluginReverseChange(Plugin*);
 };
 
 inline void PluginChain::process_pre_fader(AudioBus * bus, nframes_t nframes)

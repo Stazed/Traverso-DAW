@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include "AddRemove.h"
 #include "GainEnvelope.h"
 #include "Information.h"
+#include "Utils.h"  // for QS_C() - FIXME remove when done
 
 // Always put me below _all_ includes, this is needed
 // in case we run with memory leak detection enabled!
@@ -44,6 +45,8 @@ PluginChain::PluginChain(ContextItem* parent, TSession* session)
 
     connect(this, SIGNAL(privatePluginAdded(Plugin*)), this, SLOT(private_plugin_added(Plugin*)));
     connect(this, SIGNAL(privatePluginRemoved(Plugin*)), this, SLOT(private_plugin_removed(Plugin*)));
+    connect(this, SIGNAL(privatePluginOrderChanged(Plugin*)), this, SLOT(private_plugin_order_changed(Plugin*)));
+    connect(this, SIGNAL(privatePluginReverseChange(Plugin*)), this, SLOT(private_plugin_reverse_change(Plugin*)));
 }
 
 PluginChain::~ PluginChain()
@@ -122,6 +125,13 @@ TCommand* PluginChain::remove_plugin(Plugin* plugin, bool historable)
                           tr("Remove Plugin (%1)").arg(plugin->get_name()));
 }
 
+TCommand* PluginChain::change_plugin_order(Plugin* plugin, bool historable)
+{
+    return new AddRemove( this, plugin, historable, m_session,
+                        "private_change_plugin_order(Plugin*)", "privatePluginOrderChanged(Plugin*)",
+                        "private_reverse_plugin_change(Plugin*)", "privatePluginReverseChange(Plugin*)",
+                        tr("Re-order Plugin (%1)").arg(plugin->get_name()));
+}
 
 void PluginChain::private_add_plugin( Plugin * plugin )
 {
@@ -152,6 +162,32 @@ void PluginChain::private_remove_plugin( Plugin * plugin )
     if (!m_rtPlugins.remove(plugin)) {
 		PERROR("Plugin not found in list, this is invalid plugin remove!!!!!");
     }
+}
+
+void PluginChain::private_change_plugin_order( Plugin * plugin )
+{
+    printf("private_change_plugin_order = %s\n", QS_C(plugin->get_name()));
+
+    //m_rtPlugins.swap()
+
+}
+
+void PluginChain::private_plugin_order_changed( Plugin * plugin )
+{
+    printf("private_plugin_order_changed = %s\n", QS_C(plugin->get_name()));
+    
+    //m_plugins.swap();
+
+}
+
+void PluginChain::private_reverse_plugin_change( Plugin * plugin )
+{
+    // Not used
+}
+
+void PluginChain::private_plugin_reverse_change( Plugin * plugin )
+{
+    // Not used
 }
 
 void PluginChain::private_plugin_added(Plugin *plugin)

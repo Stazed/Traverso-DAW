@@ -49,6 +49,7 @@ public:
 	
         TCommand* add_plugin(Plugin* plugin);
         TCommand* remove_plugin(Plugin* plugin);
+        TCommand* change_plugin_order( Plugin * plugin);
 
         PluginChain* get_plugin_chain() const {return m_pluginChain;}
         TSession* get_session() const {return m_session;}

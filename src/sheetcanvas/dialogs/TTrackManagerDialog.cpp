@@ -436,15 +436,7 @@ void TTrackManagerDialog::change_pre_plugin_order(bool up)
         {
             if(plugin->get_name() == name)
             {
-                if(up)
-                {
-                    // do up
-                }
-                else
-                {
-                    // do down
-                }
-
+                TCommand::process_command(m_track->change_plugin_order(plugin));
                 break;
             }
         }
@@ -475,15 +467,7 @@ void TTrackManagerDialog::change_post_plugin_order(bool up)
         {
             if(plugin->get_name() == name)
             {
-                if(up)
-                {
-                    // do up
-                }
-                else
-                {
-                    // do down
-                }
-
+                TCommand::process_command(m_track->change_plugin_order(plugin));
                 break;
             }
         }
