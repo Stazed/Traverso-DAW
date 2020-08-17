@@ -119,6 +119,9 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
         connect(pm().get_project(), SIGNAL(trackPropertyChanged()), this, SLOT(update_routing_input_output_widget_view()));
 
         connect(preSendsListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(pre_sends_selection_changed()));
+        connect(m_track->get_plugin_chain(), SIGNAL(pluginReOrderChange()), this, SLOT(update_pre_post_fader_plugins_widget_view()));
+
+        
         connect(routingOutputListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(post_sends_selection_changed()));
         connect(trackGainSlider, SIGNAL(valueChanged(int)), this, SLOT(track_gain_value_changed(int)));
         connect(trackPanSlider, SIGNAL(valueChanged(int)), this, SLOT(track_pan_value_changed(int)));
@@ -460,8 +463,6 @@ void TTrackManagerDialog::change_pre_plugin_order(bool reorder)
             }
         }
     }
-    
-    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_postPluginsUpButton_clicked()
@@ -494,8 +495,6 @@ void TTrackManagerDialog::change_post_plugin_order(bool reorder)
             }
         }
     }
-    
-    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_prePluginsEditButton_clicked()

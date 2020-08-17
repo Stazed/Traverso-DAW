@@ -28,7 +28,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include "AddRemove.h"
 #include "GainEnvelope.h"
 #include "Information.h"
-#include "Utils.h"  // for QS_C() - FIXME remove when done
 
 // Always put me below _all_ includes, this is needed
 // in case we run with memory leak detection enabled!
@@ -224,6 +223,8 @@ void PluginChain::private_plugin_order_changed( Plugin * plugin )
         // needed for file saving and loading
         plugin->set_prefader(false);
     }
+    
+    emit pluginReOrderChange();
 }
 
 void PluginChain::private_reverse_plugin_change( Plugin * plugin )
