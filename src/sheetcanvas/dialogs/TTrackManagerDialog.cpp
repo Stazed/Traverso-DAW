@@ -442,7 +442,7 @@ void TTrackManagerDialog::on_prePluginsDownButton_clicked()
     change_pre_plugin_order(false);
 }
 
-void TTrackManagerDialog::change_pre_plugin_order(bool up)
+void TTrackManagerDialog::change_pre_plugin_order(bool reorder)
 {
     QList<QListWidgetItem*> selectedItems = preFaderPluginsListWidget->selectedItems();
     QList<Plugin*> preFaderPlugins = m_track->get_plugin_chain()->get_pre_fader_plugins();
@@ -454,11 +454,14 @@ void TTrackManagerDialog::change_pre_plugin_order(bool up)
         {
             if(plugin->get_name() == name)
             {
+                plugin->set_reorder(reorder);
                 TCommand::process_command(m_track->change_plugin_order(plugin));
                 break;
             }
         }
     }
+    
+    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_postPluginsUpButton_clicked()
@@ -473,7 +476,7 @@ void TTrackManagerDialog::on_postPluginsDownButton_clicked()
     change_post_plugin_order(false);
 }
 
-void TTrackManagerDialog::change_post_plugin_order(bool up)
+void TTrackManagerDialog::change_post_plugin_order(bool reorder)
 {
     QList<QListWidgetItem*> selectedItems = postFaderPluginsListWidget->selectedItems();
     QList<Plugin*> postFaderPlugins = m_track->get_plugin_chain()->get_post_fader_plugins();
@@ -485,11 +488,14 @@ void TTrackManagerDialog::change_post_plugin_order(bool up)
         {
             if(plugin->get_name() == name)
             {
+                plugin->set_reorder(reorder);
                 TCommand::process_command(m_track->change_plugin_order(plugin));
                 break;
             }
         }
     }
+    
+    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_prePluginsEditButton_clicked()

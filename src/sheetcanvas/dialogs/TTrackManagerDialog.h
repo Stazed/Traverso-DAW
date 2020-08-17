@@ -57,8 +57,8 @@ private:
         
         void edit_plugin_properties(Plugin *plugin);
         void add_new_plugin(bool preFader);
-        void change_pre_plugin_order(bool up);
-        void change_post_plugin_order(bool up);
+        void change_pre_plugin_order(bool reorder);
+        void change_post_plugin_order(bool reorder);
 
 private slots:
         void update_routing_input_output_widget_view();

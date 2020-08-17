@@ -174,10 +174,39 @@ void PluginChain::private_change_plugin_order( Plugin * plugin )
 
 void PluginChain::private_plugin_order_changed( Plugin * plugin )
 {
-    printf("private_plugin_order_changed = %s\n", QS_C(plugin->get_name()));
+    int first = m_plugins.indexOf(plugin);
+    int second = 0;
+    int size = m_plugins.size();
     
-    //m_plugins.swap();
+    if(plugin->is_reorder_up())
+    {
+        second = first - 1;
+        
+        if(second < 0)
+            return;     // we are already at the beginning
+    }
+    else
+    {
+        second = first + 1;
+        
+        if(second >= size)
+            return;     // we are already at the end
+    }
+    
+    // do the swap
+    m_plugins.swap(first, second);
 
+    // We allow the plugin to be moved from pre to post fader and visa versa
+    if(m_plugins.indexOf(m_fader) > m_plugins.indexOf(plugin))
+    {
+        // needed for file saving and loading
+        plugin->set_prefader(true);
+    }
+    else
+    {
+        // needed for file saving and loading
+        plugin->set_prefader(false);
+    }
 }
 
 void PluginChain::private_reverse_plugin_change( Plugin * plugin )

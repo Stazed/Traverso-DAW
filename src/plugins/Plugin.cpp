@@ -38,6 +38,7 @@ Plugin::Plugin(TSession* session)
     m_bypass = false;
     m_isLV2 = false;
     m_preFader = false;
+    m_reorder = false;
 }
 
 bool Plugin::is_smaller_then(APILinkedListNode *node)
