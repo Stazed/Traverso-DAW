@@ -131,7 +131,25 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
 TTrackManagerDialog::~TTrackManagerDialog()
 {
     PENTERDES;
-    delete m_propertiesDialog;
+    if(m_propertiesDialog)
+    {
+        delete m_propertiesDialog;
+    }
+    
+    if (m_routingInputMenu)
+    {
+        delete m_routingInputMenu;
+    }
+    
+    if (m_routingOutputMenu)
+    {
+        delete m_routingOutputMenu;
+    }
+    
+    if (m_preSendsMenu)
+    {
+        delete m_preSendsMenu;
+    }
 }
 
 void TTrackManagerDialog::create_routing_input_menu()
