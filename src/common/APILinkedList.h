@@ -216,11 +216,12 @@ inline void APILinkedList::swap(APILinkedListNode* first, APILinkedListNode* sec
     if(!currX->next)
     {
         m_last = currX;
+        m_last->next = nullptr;
     }
-    
-    if(!currY->next)
+    else if(!currY->next)
     {
         m_last = currY;
+        m_last->next = nullptr;
     }
     
     Q_ASSERT(m_last == slow_last());
