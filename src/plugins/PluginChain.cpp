@@ -260,13 +260,15 @@ void PluginChain::private_plugin_added(Plugin *plugin)
     }
     
     
-    emit pluginAdded(plugin);
+    emit pluginAdded(plugin);       // PluginChainView
+    emit pluginReOrderChange();     // TrackManagerDialog
 }
 
 void PluginChain::private_plugin_removed(Plugin *plugin)
 {
     m_plugins.removeAll(plugin);
     emit pluginRemoved(plugin);
+    emit pluginReOrderChange();     // TrackManagerDialog
 }
 
 void PluginChain::set_session(TSession * session)

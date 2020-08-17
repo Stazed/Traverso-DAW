@@ -120,8 +120,6 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
 
         connect(preSendsListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(pre_sends_selection_changed()));
         connect(m_track->get_plugin_chain(), SIGNAL(pluginReOrderChange()), this, SLOT(update_pre_post_fader_plugins_widget_view()));
-
-        
         connect(routingOutputListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(post_sends_selection_changed()));
         connect(trackGainSlider, SIGNAL(valueChanged(int)), this, SLOT(track_gain_value_changed(int)));
         connect(trackPanSlider, SIGNAL(valueChanged(int)), this, SLOT(track_pan_value_changed(int)));
@@ -578,8 +576,6 @@ void TTrackManagerDialog::add_new_plugin(bool preFader)
             TCommand::process_command(m_track->add_plugin(plugin));
         }
     }
-    
-    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_routingInputRemoveButton_clicked()
@@ -655,7 +651,6 @@ void TTrackManagerDialog::on_pluginsRemoveButton_clicked()
             }
         }
     }
-    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_routingOutputRemoveButton_clicked()
