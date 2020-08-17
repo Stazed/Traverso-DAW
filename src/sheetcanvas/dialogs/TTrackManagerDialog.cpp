@@ -412,6 +412,84 @@ void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view()
     }
 }
 
+void TTrackManagerDialog::on_prePluginsUpButton_clicked()
+{
+    // true is up
+    change_pre_plugin_order(true);
+}
+
+void TTrackManagerDialog::on_prePluginsDownButton_clicked()
+{
+    // false is down
+    change_pre_plugin_order(false);
+}
+
+void TTrackManagerDialog::change_pre_plugin_order(bool up)
+{
+    QList<QListWidgetItem*> selectedItems = preFaderPluginsListWidget->selectedItems();
+    QList<Plugin*> preFaderPlugins = m_track->get_plugin_chain()->get_pre_fader_plugins();
+    foreach(QListWidgetItem* item, selectedItems)
+    {
+        QString name = item->text();
+
+        foreach(Plugin* plugin, preFaderPlugins)
+        {
+            if(plugin->get_name() == name)
+            {
+                if(up)
+                {
+                    // do up
+                }
+                else
+                {
+                    // do down
+                }
+
+                break;
+            }
+        }
+    }
+}
+
+void TTrackManagerDialog::on_postPluginsUpButton_clicked()
+{
+    // true is up
+    change_post_plugin_order(true);
+}
+
+void TTrackManagerDialog::on_postPluginsDownButton_clicked()
+{
+    // false is down
+    change_post_plugin_order(false);
+}
+
+void TTrackManagerDialog::change_post_plugin_order(bool up)
+{
+    QList<QListWidgetItem*> selectedItems = postFaderPluginsListWidget->selectedItems();
+    QList<Plugin*> postFaderPlugins = m_track->get_plugin_chain()->get_post_fader_plugins();
+    foreach(QListWidgetItem* item, selectedItems)
+    {
+        QString name = item->text();
+
+        foreach(Plugin* plugin, postFaderPlugins)
+        {
+            if(plugin->get_name() == name)
+            {
+                if(up)
+                {
+                    // do up
+                }
+                else
+                {
+                    // do down
+                }
+
+                break;
+            }
+        }
+    }
+}
+
 void TTrackManagerDialog::on_prePluginsEditButton_clicked()
 {
     QList<QListWidgetItem*> selectedItems = preFaderPluginsListWidget->selectedItems();

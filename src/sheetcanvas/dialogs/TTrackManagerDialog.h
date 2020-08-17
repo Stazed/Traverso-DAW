@@ -57,6 +57,8 @@ private:
         
         void edit_plugin_properties(Plugin *plugin);
         void add_new_plugin(bool preFader);
+        void change_pre_plugin_order(bool up);
+        void change_post_plugin_order(bool up);
 
 private slots:
         void update_routing_input_output_widget_view();
@@ -69,6 +71,12 @@ private slots:
         void routingInputMenuActionTriggered(QAction* action);
         void routingOutputMenuActionTriggered(QAction* action);
         void preSendsMenuActionTriggered(QAction* action);
+        
+        void on_prePluginsUpButton_clicked();
+        void on_prePluginsDownButton_clicked();
+        
+        void on_postPluginsUpButton_clicked();
+        void on_postPluginsDownButton_clicked();
 
         void on_prePluginsEditButton_clicked();
         void on_postPluginsEditButton_clicked();
