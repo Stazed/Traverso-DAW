@@ -104,9 +104,11 @@ SheetView::SheetView(SheetWidget* sheetwidget,
 
 	if (m_session->is_project_session()) {
 		m_projectMasterOutView = new TBusTrackView(this, pm().get_project()->get_master_out_bus_track());
+                connect(m_projectMasterOutView, SIGNAL(totalTrackHeightChanged()), this, SLOT(layout_tracks()));
 	}
 	if (sheet) {
 		m_sheetMasterOutView = new TBusTrackView(this, m_session->get_master_out_bus_track());
+                connect(m_sheetMasterOutView, SIGNAL(totalTrackHeightChanged()), this, SLOT(layout_tracks()));
 	}
 
 	connect(m_session, SIGNAL(workingPosChanged()), m_workCursor, SLOT(update_position()));
@@ -139,7 +141,7 @@ SheetView::SheetView(SheetWidget* sheetwidget,
 	connect(m_vScrollBar, SIGNAL(valueChanged(int)), m_clipsViewPort->verticalScrollBar(), SLOT(setValue(int)));
 
 	connect(&cpointer(), SIGNAL(contextChanged()), this, SLOT(context_changed()));
-
+        
 	// fill the view with trackviews, add_new_trackview()
 	// doesn't yet layout the new tracks.
 	foreach(Track* track, m_session->get_tracks()) {
