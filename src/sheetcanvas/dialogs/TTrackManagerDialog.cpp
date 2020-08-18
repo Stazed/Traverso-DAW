@@ -515,7 +515,6 @@ void TTrackManagerDialog::on_prePluginsEditButton_clicked()
         {
             if(plugin->get_name() == name)
             {
-                connect(plugin, SIGNAL(bypassChanged()), this, SLOT(update_pre_post_fader_plugins_widget_view()));
                 edit_plugin_properties(plugin);
                 break;
             }
@@ -535,7 +534,6 @@ void TTrackManagerDialog::on_postPluginsEditButton_clicked()
         {
             if(plugin->get_name() == name)
             {
-                connect(plugin, SIGNAL(bypassChanged()), this, SLOT(update_pre_post_fader_plugins_widget_view()));
                 edit_plugin_properties(plugin);
                 break;
             }
@@ -545,6 +543,8 @@ void TTrackManagerDialog::on_postPluginsEditButton_clicked()
 
 void TTrackManagerDialog::edit_plugin_properties(Plugin *plugin)
 {
+    connect(plugin, SIGNAL(bypassChanged()), this, SLOT(update_pre_post_fader_plugins_widget_view()));
+    
     if(m_propertiesDialog)
     {
         delete m_propertiesDialog;
