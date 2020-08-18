@@ -417,6 +417,10 @@ void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view()
     QList<Plugin*> postFaderPlugins = m_track->get_plugin_chain()->get_post_fader_plugins();
     foreach(Plugin* plugin, postFaderPlugins) {
             QListWidgetItem* item = new QListWidgetItem(postFaderPluginsListWidget);
+            if(plugin->is_bypassed())
+            {
+                item->setTextColor(QColor(Qt::lightGray));
+            }
             item->setText(plugin->get_name());
             item->setData(Qt::UserRole, plugin->get_id());
     }
@@ -426,6 +430,10 @@ void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view()
     QList<Plugin*> preFaderPlugins = m_track->get_plugin_chain()->get_pre_fader_plugins();
     foreach(Plugin* plugin, preFaderPlugins) {
             QListWidgetItem* item = new QListWidgetItem(preFaderPluginsListWidget);
+            if(plugin->is_bypassed())
+            {
+                item->setTextColor(QColor(Qt::lightGray));
+            }
             item->setText(plugin->get_name());
             item->setData(Qt::UserRole, plugin->get_id());
     }
