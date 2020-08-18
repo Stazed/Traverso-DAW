@@ -61,7 +61,7 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
         create_pre_sends_menu();
 
         update_routing_input_output_widget_view();
-        update_pre_post_fader_plugins_widget_view();
+        update_pre_post_fader_plugins_widget_view(nullptr);
         
         jackInPortsCheckBox->setChecked(m_track->get_jack_in_ports());
         jackOutPortsCheckBox->setChecked(m_track->get_jack_out_ports());
@@ -119,7 +119,7 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
         connect(pm().get_project(), SIGNAL(trackPropertyChanged()), this, SLOT(update_routing_input_output_widget_view()));
 
         connect(preSendsListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(pre_sends_selection_changed()));
-        connect(m_track->get_plugin_chain(), SIGNAL(pluginReOrderChange()), this, SLOT(update_pre_post_fader_plugins_widget_view()));
+        connect(m_track->get_plugin_chain(), SIGNAL(pluginReOrderChange(Plugin*)), this, SLOT(update_pre_post_fader_plugins_widget_view(Plugin*)));
         connect(routingOutputListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(post_sends_selection_changed()));
         connect(trackGainSlider, SIGNAL(valueChanged(int)), this, SLOT(track_gain_value_changed(int)));
         connect(trackPanSlider, SIGNAL(valueChanged(int)), this, SLOT(track_pan_value_changed(int)));
@@ -411,7 +411,7 @@ void TTrackManagerDialog::update_routing_input_output_widget_view()
         }
 }
 
-void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view()
+void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view(Plugin * selectedPlugin)
 {
     postFaderPluginsListWidget->clear();
     QList<Plugin*> postFaderPlugins = m_track->get_plugin_chain()->get_post_fader_plugins();
@@ -423,6 +423,12 @@ void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view()
             }
             item->setText(plugin->get_name());
             item->setData(Qt::UserRole, plugin->get_id());
+            
+            if(selectedPlugin)
+            {
+                if(selectedPlugin->get_name() == plugin->get_name())
+                    item->setSelected(true);
+            }
     }
 
 
@@ -436,6 +442,12 @@ void TTrackManagerDialog::update_pre_post_fader_plugins_widget_view()
             }
             item->setText(plugin->get_name());
             item->setData(Qt::UserRole, plugin->get_id());
+            
+            if(selectedPlugin)
+            {
+                if(selectedPlugin->get_name() == plugin->get_name())
+                    item->setSelected(true);
+            }
     }
 }
 
@@ -642,7 +654,6 @@ void TTrackManagerDialog::on_pluginsRemoveButton_2_clicked()
             }
         }
     }
-    update_pre_post_fader_plugins_widget_view();
 }
 
 void TTrackManagerDialog::on_pluginsRemoveButton_clicked()

@@ -79,7 +79,7 @@ signals:
     void privatePluginAdded(Plugin*);
     void privatePluginOrderChanged(Plugin*);
     void privatePluginReverseChange(Plugin*);
-    void pluginReOrderChange();
+    void pluginReOrderChange(Plugin*);
 };
 
 inline void PluginChain::process_pre_fader(AudioBus * bus, nframes_t nframes)

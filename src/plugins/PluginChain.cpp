@@ -224,7 +224,7 @@ void PluginChain::private_plugin_order_changed( Plugin * plugin )
         plugin->set_prefader(false);
     }
     
-    emit pluginReOrderChange();
+    emit pluginReOrderChange(plugin);
 }
 
 void PluginChain::private_reverse_plugin_change( Plugin * plugin )
@@ -261,14 +261,14 @@ void PluginChain::private_plugin_added(Plugin *plugin)
     
     
     emit pluginAdded(plugin);       // PluginChainView
-    emit pluginReOrderChange();     // TrackManagerDialog
+    emit pluginReOrderChange(plugin);     // TrackManagerDialog
 }
 
 void PluginChain::private_plugin_removed(Plugin *plugin)
 {
     m_plugins.removeAll(plugin);
     emit pluginRemoved(plugin);
-    emit pluginReOrderChange();     // TrackManagerDialog
+    emit pluginReOrderChange(nullptr);     // TrackManagerDialog
 }
 
 void PluginChain::set_session(TSession * session)
