@@ -39,6 +39,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 // in case we run with memory leak detection enabled!
 #include "Debugger.h"
 
+#define PLUGIN_WIDTH_MAX   140
+#define PLUGIN_WIDTH_MIN    80
+#define PLUGIN_HEIGHT       24
+
 PluginView::PluginView(PluginChainView* parent, PluginChain* chain, Plugin* plugin, int index)
 	: ViewItem(parent, plugin)
 	, m_pluginchain(chain)
@@ -56,6 +60,9 @@ PluginView::PluginView(PluginChainView* parent, PluginChain* chain, Plugin* plug
 	
 	QFontMetrics fm(themer()->get_font("Plugin:fontscale:name"));
 	m_textwidth = fm.width(m_name);
+        
+        // Limit text display to max width and use ... if wider than max
+        m_name = fm.elidedText(m_name, Qt::ElideRight, PLUGIN_WIDTH_MAX);
 	
 	calculate_bounding_rect();
 	
@@ -138,13 +145,18 @@ void PluginView::repaint( )
 
 void PluginView::calculate_bounding_rect()
 {
-    int height = 24;
+    int height = PLUGIN_HEIGHT;
+    
+    // Set minimum and maximum width
+    int width = ((m_textwidth + 8) > PLUGIN_WIDTH_MIN) ? (m_textwidth + 8) : PLUGIN_WIDTH_MIN ;
+    width = (width <= PLUGIN_WIDTH_MAX) ? width : PLUGIN_WIDTH_MAX ;
+    
     int parentheight = int(m_parentViewItem->boundingRect().height());
     if (parentheight < 30) {
         height = parentheight - 3;
     }
     int y = parentheight - height;
-    m_boundingRect = QRectF(0, 0, m_textwidth + 8, height);
+    m_boundingRect = QRectF(0, 0, width, height);
 	setPos(x(), y);
 }
 
