@@ -73,8 +73,7 @@ private slots:
     void private_plugin_reverse_change(Plugin* plugin);
 
 signals:
-    void pluginAdded(Plugin* plugin);
-    void pluginRemoved(Plugin* plugin);
+
     void privatePluginRemoved(Plugin*);
     void privatePluginAdded(Plugin*);
     void privatePluginOrderChanged(Plugin*);

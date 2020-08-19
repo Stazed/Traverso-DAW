@@ -48,8 +48,7 @@ PluginChainView::PluginChainView(SheetView* sv, ViewItem* parent, PluginChain* c
         add_plugin(plugin);
     }
 
-    connect(chain, SIGNAL(pluginAdded(Plugin*)), this, SLOT(add_plugin(Plugin*)));
-    connect(chain, SIGNAL(pluginRemoved(Plugin*)), this, SLOT(remove_plugin(Plugin*)));
+    connect(chain, SIGNAL(pluginReOrderChange(Plugin*)), this, SLOT(plugin_reorder(Plugin*)));
     connect(m_sv->get_clips_viewport()->horizontalScrollBar(), SIGNAL(valueChanged(int)),
             this, SLOT(scrollbar_value_changed(int)));
 }
@@ -57,6 +56,20 @@ PluginChainView::PluginChainView(SheetView* sv, ViewItem* parent, PluginChain* c
 PluginChainView::~PluginChainView( )
 {
     PENTERDES2;
+}
+
+// Each time a plugin is added/removed or re-ordered, just delete and re-add based on PluginChain
+void PluginChainView::plugin_reorder(Plugin*)
+{
+    foreach(PluginView* view, m_pluginViews)
+    {
+        m_pluginViews.removeAll(view);
+        delete view;
+    }
+    
+    for(auto plugin : m_pluginchain->get_plugins()) {
+        add_plugin(plugin);
+    }
 }
 
 void PluginChainView::add_plugin( Plugin * plugin )
@@ -77,6 +90,7 @@ void PluginChainView::add_plugin( Plugin * plugin )
     }
 }
 
+// Not really needed if we are going to re-order everything since we delete all and re-add
 void PluginChainView::remove_plugin( Plugin * plugin )
 {
     foreach(PluginView* view, m_pluginViews) {
