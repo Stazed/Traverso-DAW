@@ -44,6 +44,7 @@ public:
     Plugin* get_plugin();
     void set_index(int index);
     void set_moving(bool move);
+    void set_center(qreal center){m_center = center;}
     qreal get_center(){return m_center;}
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

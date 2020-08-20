@@ -77,21 +77,25 @@ void PluginChainView::plugin_move(PluginView* view)
 {
     int moveTo = 0;
     
-    foreach(PluginView* viewCheck, m_pluginViews)
+    if(view->x() != (qreal) 0.0)
     {
-        if(viewCheck == view)
-            continue;
-        
-        if(view->get_center() < viewCheck->get_center())
+        foreach(PluginView* viewCheck, m_pluginViews)
         {
-            view->get_plugin()->set_move_to(moveTo);
-            break;
+            if(viewCheck == view)
+                continue;
+
+            if(view->get_center() < viewCheck->get_center())
+            {
+                break;
+            }
+            moveTo++;
         }
-        moveTo++;
     }
     
+    view->get_plugin()->set_move_to(moveTo);
+//    printf("\n\n%s moved to %d\n", QS_C(view->get_plugin()->get_name()), moveTo); 
+    
     TCommand::process_command(m_pluginchain->move_plugin(view->get_plugin()));
-   //printf("%s moved to %d\n", QS_C(view->get_plugin()->get_name()), moveTo); 
     
 }
 
@@ -106,6 +110,8 @@ void PluginChainView::add_plugin( Plugin * plugin )
     }
 
     view->setPos(x, m_boundingRect.height() - view->boundingRect().height());
+    
+    view->set_center((x + view->boundingRect().width()) / 2);
 
     m_pluginViews.append(view);
 
