@@ -255,6 +255,13 @@ void PluginChain::private_move_plugin(Plugin* plugin)
 void PluginChain::private_plugin_moved(Plugin* plugin)
 {
     int from = m_plugins.indexOf(plugin);
+    int to = plugin->get_move_to();
+    
+    if(from == to || (to >= m_plugins.size()))
+    {
+        emit pluginReOrderChange(plugin);
+        return;
+    }
     
     m_plugins.move(from, plugin->get_move_to());
     
