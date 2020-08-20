@@ -336,13 +336,20 @@ int Project::load(const QString& projectfile)
                         }
                         m_softwareAudioBuses.insert(bus->get_id(), bus);
                 }
-                if (bus->get_bus_type() == BusIsHardware) {
-                        foreach(QString channelName, conf.channelNames) {
-                                bus->add_channel(channelName);
-                        }
-                        m_hardwareAudioBuses.append(bus);
+                
+                // Jack does not need hardware buses - but they could be created
+                // by NULL driver if the user failed to start jack prior to starting Traverso
+                if (audiodevice().get_driver_type() != "Jack")
+                {
+                    if (bus->get_bus_type() == BusIsHardware)
+                    {
+                            foreach(QString channelName, conf.channelNames)
+                            {
+                                    bus->add_channel(channelName);
+                            }
+                            m_hardwareAudioBuses.append(bus);
+                    }
                 }
-
                 busNode = busNode.nextSibling();
         }
 
@@ -629,7 +636,14 @@ QDomNode Project::get_state(QDomDocument doc, bool istemplate)
         QDomElement busesElement = doc.createElement("AudioBuses");
 
         QList<AudioBus*> buses;
-        buses.append(m_hardwareAudioBuses);
+        
+        // Jack does not need hardware buses - but they could be created
+        // by NULL driver if the user failed to start jack prior to starting Traverso
+        if (audiodevice().get_driver_type() != "Jack")
+        {
+            buses.append(m_hardwareAudioBuses);
+        }
+
         buses.append(m_softwareAudioBuses.values());
 
         foreach(AudioBus* bus, buses)
