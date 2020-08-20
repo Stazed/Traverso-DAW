@@ -249,7 +249,28 @@ void PluginChain::private_plugin_reverse_change( Plugin * plugin )
 
 void PluginChain::private_move_plugin(Plugin* plugin)
 {
-    printf("private_move_plugin\n") ;
+    int from = m_rtPlugins.indexOf(plugin);
+    int to = plugin->get_move_to();
+    
+    if(from == to || (to >= m_rtPlugins.size()))
+    {
+        return;
+    }
+    
+    if(from < to)
+    {
+        for(; to > from; --to)
+        {
+            m_rtPlugins.swap(m_rtPlugins.at(to), m_rtPlugins.at(from));
+        }
+    }
+    else
+    {
+        for(; to < from; ++to)
+        {
+            m_rtPlugins.swap(m_rtPlugins.at(from), m_rtPlugins.at(to));
+        }
+    }
 }
 
 void PluginChain::private_plugin_moved(Plugin* plugin)
