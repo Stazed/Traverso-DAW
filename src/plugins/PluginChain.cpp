@@ -46,6 +46,8 @@ PluginChain::PluginChain(ContextItem* parent, TSession* session)
     connect(this, SIGNAL(privatePluginRemoved(Plugin*)), this, SLOT(private_plugin_removed(Plugin*)));
     connect(this, SIGNAL(privatePluginOrderChanged(Plugin*)), this, SLOT(private_plugin_order_changed(Plugin*)));
     connect(this, SIGNAL(privatePluginReverseChange(Plugin*)), this, SLOT(private_plugin_reverse_change(Plugin*)));
+    connect(this, SIGNAL(privatePluginMoved(Plugin*)), this, SLOT(private_plugin_moved(Plugin*)));
+
 }
 
 PluginChain::~ PluginChain()
@@ -128,6 +130,14 @@ TCommand* PluginChain::change_plugin_order(Plugin* plugin, bool historable)
 {
     return new AddRemove( this, plugin, historable, m_session,
                         "private_change_plugin_order(Plugin*)", "privatePluginOrderChanged(Plugin*)",
+                        "private_reverse_plugin_change(Plugin*)", "privatePluginReverseChange(Plugin*)",
+                        tr("Re-order Plugin (%1)").arg(plugin->get_name()));
+}
+
+TCommand* PluginChain::move_plugin(Plugin* plugin, bool historable)
+{
+    return new AddRemove( this, plugin, historable, m_session,
+                        "private_move_plugin(Plugin*)", "privatePluginMoved(Plugin*)",
                         "private_reverse_plugin_change(Plugin*)", "privatePluginReverseChange(Plugin*)",
                         tr("Re-order Plugin (%1)").arg(plugin->get_name()));
 }
@@ -235,6 +245,17 @@ void PluginChain::private_reverse_plugin_change( Plugin * plugin )
 void PluginChain::private_plugin_reverse_change( Plugin * plugin )
 {
     // Not used
+}
+
+void PluginChain::private_move_plugin(Plugin* plugin)
+{
+    printf("private_move_plugin\n") ;
+}
+
+void PluginChain::private_plugin_moved(Plugin* plugin)
+{
+    printf("private_plugin_moved\n");
+    emit pluginReOrderChange(plugin);
 }
 
 void PluginChain::private_plugin_added(Plugin *plugin)

@@ -50,6 +50,7 @@ public slots:
     void remove_plugin(Plugin* plugin);
     void scrollbar_value_changed(int value);
     void plugin_reorder(Plugin*);
+    void plugin_move(PluginView*);
 };
 
 #endif

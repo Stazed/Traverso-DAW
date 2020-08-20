@@ -44,6 +44,7 @@ public:
     Plugin* get_plugin();
     void set_index(int index);
     void set_moving(bool move);
+    qreal get_center(){return m_center;}
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void calculate_bounding_rect();
@@ -55,6 +56,7 @@ private:
     int             m_index;
     bool            m_moving;
     int             m_textwidth;
+    qreal           m_center;
     QString         m_name;
 
     PluginPropertiesDialog* m_propertiesDialog;
@@ -65,6 +67,10 @@ public slots:
 
 private slots:
     void repaint();
+    
+signals:
+    void pluginMove(PluginView*);
+
 };
 
 #endif

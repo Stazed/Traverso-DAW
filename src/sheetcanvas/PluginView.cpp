@@ -135,6 +135,18 @@ void PluginView::set_index(int index)
 void PluginView::set_moving(bool move)
 {
     m_moving = move;
+    
+    if(!m_moving)
+    {
+        //printf("Stop moving - %s\n", QS_C(m_name));
+        //printf("x(%f) : w(%f) : center (%f)\n", x(), m_boundingRect.width(), m_center);
+        
+        // reset the center to new location
+        m_center = (x() + m_boundingRect.width()) / 2;
+        emit pluginMove(this);
+        return;
+    }
+    
     update();
 }
 
@@ -157,6 +169,8 @@ void PluginView::calculate_bounding_rect()
     }
     int y = parentheight - height;
     m_boundingRect = QRectF(0, 0, width, height);
-	setPos(x(), y);
+    setPos(x(), y);
+        
+    m_center = (x() + m_boundingRect.width()) / 2;
 }
 

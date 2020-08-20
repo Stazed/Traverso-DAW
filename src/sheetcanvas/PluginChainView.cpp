@@ -28,6 +28,7 @@
 #include "PluginView.h"
 #include "PluginChain.h"
 #include "Plugin.h"
+#include "TCommand.h"
 
 // Always put me below _all_ includes, this is needed
 // in case we run with memory leak detection enabled!
@@ -72,9 +73,32 @@ void PluginChainView::plugin_reorder(Plugin*)
     }
 }
 
+void PluginChainView::plugin_move(PluginView* view)
+{
+    int moveTo = 0;
+    
+    foreach(PluginView* viewCheck, m_pluginViews)
+    {
+        if(viewCheck == view)
+            continue;
+        
+        if(view->get_center() < viewCheck->get_center())
+        {
+            view->get_plugin()->set_move_to(moveTo);
+            break;
+        }
+        moveTo++;
+    }
+    
+    TCommand::process_command(m_pluginchain->move_plugin(view->get_plugin()));
+   //printf("%s moved to %d\n", QS_C(view->get_plugin()->get_name()), moveTo); 
+    
+}
+
 void PluginChainView::add_plugin( Plugin * plugin )
 {
     PluginView* view = new PluginView(this, m_pluginchain, plugin, m_pluginViews.size());
+    connect(view, SIGNAL(pluginMove(PluginView*)), this, SLOT(plugin_move(PluginView*)));
 
     int x = 6;
     foreach(PluginView* view, m_pluginViews) {

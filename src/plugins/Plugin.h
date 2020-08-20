@@ -78,6 +78,8 @@ public:
     bool is_prefader(){return m_preFader;}
     void set_reorder(bool reorder){m_reorder = reorder;}    // true = up, false = down
     bool is_reorder_up(){return m_reorder;}
+    void set_move_to(int set){m_moveTo = set;}
+    int get_move_to(){return m_moveTo;}
 
     void automate_port(int index, bool automate);
     void set_sliders(QList<PluginSlider*> sliders) {m_sliders = sliders; }
@@ -99,6 +101,7 @@ protected:
     bool        m_isLV2;
     bool        m_preFader;
     bool        m_reorder;
+    int         m_moveTo;
     
     // Default preset name.
     static QString g_DefaultPreset;
