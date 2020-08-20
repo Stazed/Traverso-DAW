@@ -46,6 +46,8 @@ public:
     void set_moving(bool move);
     void set_center(qreal center){m_center = center;}
     qreal get_center(){return m_center;}
+    PluginChain* get_plugin_chain(){return m_pluginchain;}
+    
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void calculate_bounding_rect();

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
 #include "MovePlugin.h"
 
 #include "PluginView.h"
+#include <PluginChain.h>
 
 // Always put me below _all_ includes, this is needed
 // in case we run with memory leak detection enabled!
@@ -50,6 +51,8 @@ int MovePlugin::begin_hold()
 int MovePlugin::finish_hold()
 {
     m_pluginView->set_moving(false);
+    
+    TCommand::process_command(m_pluginView->get_plugin_chain()->move_plugin(m_pluginView->get_plugin()));
 
     return 1;
 }

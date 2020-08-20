@@ -254,7 +254,25 @@ void PluginChain::private_move_plugin(Plugin* plugin)
 
 void PluginChain::private_plugin_moved(Plugin* plugin)
 {
-    printf("private_plugin_moved\n");
+    int from = m_plugins.indexOf(plugin);
+    
+    m_plugins.move(from, plugin->get_move_to());
+    
+    for(Plugin* plugin : m_plugins)
+    {
+        // We allow the plugin to be moved from pre to post fader and visa versa
+        if(m_plugins.indexOf(m_fader) > m_plugins.indexOf(plugin))
+        {
+            // needed for file saving and loading
+            plugin->set_prefader(true);
+        }
+        else
+        {
+            // needed for file saving and loading
+            plugin->set_prefader(false);
+        }
+    }
+    
     emit pluginReOrderChange(plugin);
 }
 

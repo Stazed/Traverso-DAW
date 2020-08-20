@@ -94,9 +94,6 @@ void PluginChainView::plugin_move(PluginView* view)
     
     view->get_plugin()->set_move_to(moveTo);
 //    printf("\n\n%s moved to %d\n", QS_C(view->get_plugin()->get_name()), moveTo); 
-    
-    TCommand::process_command(m_pluginchain->move_plugin(view->get_plugin()));
-    
 }
 
 void PluginChainView::add_plugin( Plugin * plugin )
