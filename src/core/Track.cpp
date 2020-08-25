@@ -425,6 +425,10 @@ void Track::remove_post_send(TSend *send)
     // Don't remove tracks own post send, we don't allow removal of input bus either
     if (send->get_name() == m_name)
         return;
+    
+    // Don't remove the jack master main bus out!!!
+    if (send->get_name() == "Jackmaster")
+        return;
 
     if (!m_session || (m_session && m_session->is_transport_rolling())) {
         THREAD_SAVE_INVOKE_AND_EMIT_SIGNAL(this, send, private_remove_post_send(TSend*), routingConfigurationChanged())
