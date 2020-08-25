@@ -173,13 +173,16 @@ bool AudioBus::is_valid() const
  * Get the peak value with AudioChannel::get_peak_value()
  * @param monitor 
  */
-void AudioBus::set_monitoring( bool monitor )
+void AudioBus::set_monitoring( bool )
 {
-        m_isMonitoring = monitor;
-	
-	for (int i=0; i<m_channels.size(); ++i) {
-                m_channels.at(i)->set_monitoring(monitor);
-	}
+    // toggle
+    m_isMonitoring = !m_isMonitoring;
+
+    for (int i=0; i<m_channels.size(); ++i) {
+            m_channels.at(i)->set_monitoring(m_isMonitoring);
+    }
+
+    emit monitorChanged(m_isMonitoring);
 }
 
 //eof

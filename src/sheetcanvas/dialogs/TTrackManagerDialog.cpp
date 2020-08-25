@@ -111,10 +111,14 @@ TTrackManagerDialog::TTrackManagerDialog(Track *track, QWidget *parent)
         connect(m_track, SIGNAL(soloChanged(bool)), this, SLOT(update_track_status_buttons(bool)));
         connect(m_track, SIGNAL(muteChanged(bool)), this, SLOT(update_track_status_buttons(bool)));
         AudioTrack* audiotrack = qobject_cast<AudioTrack*>(m_track);
-        if (audiotrack) {
-                connect(audiotrack, SIGNAL(armedChanged(bool)), this, SLOT(update_track_status_buttons(bool)));
-        } else {
-                recordButton->hide();
+        if (audiotrack)
+        {
+            connect(audiotrack->get_input_bus(), SIGNAL(monitorChanged(bool)), this, SLOT(update_track_status_buttons(bool)));
+            connect(audiotrack, SIGNAL(armedChanged(bool)), this, SLOT(update_track_status_buttons(bool)));
+        } else
+        {
+            monitorButton->hide();  // currently does nothing if not audiotrack
+            recordButton->hide();   // buses cannot record
         }
         connect(pm().get_project(), SIGNAL(trackPropertyChanged()), this, SLOT(update_routing_input_output_widget_view()));
 
@@ -814,7 +818,11 @@ void TTrackManagerDialog::on_recordButton_clicked()
 
 void TTrackManagerDialog::on_monitorButton_clicked()
 {
-//        m_track->monitor();
+    AudioTrack* audiotrack = qobject_cast<AudioTrack*>(m_track);
+    if (audiotrack)
+    {
+        audiotrack->get_input_bus()->set_monitoring(true);
+    }
 }
 
 void TTrackManagerDialog::update_track_status_buttons(bool)
@@ -835,14 +843,28 @@ void TTrackManagerDialog::update_track_status_buttons(bool)
         } else {
                 soloButton->setPalette(defaultPalette);
         }
-
+        
         AudioTrack* audiotrack = qobject_cast<AudioTrack*>(m_track);
-        if (audiotrack) {
-                if (audiotrack->armed()) {
-                        highlightedPalette.setColor(QPalette::Button, themer()->get_color("TrackPanel:recled"));
-                        recordButton->setPalette(highlightedPalette);
-                } else {
-                        recordButton->setPalette(defaultPalette);
-                }
+        if (audiotrack)
+        {
+            if (m_track->get_input_bus()->get_monitoring())
+            {
+                highlightedPalette.setColor(QPalette::Button, themer()->get_color("TrackPanel:monitorled"));
+                monitorButton->setPalette(highlightedPalette);
+            }
+            else
+            {
+                monitorButton->setPalette(defaultPalette);
+            }
+            
+            if (audiotrack->armed())
+            {
+                highlightedPalette.setColor(QPalette::Button, themer()->get_color("TrackPanel:recled"));
+                recordButton->setPalette(highlightedPalette);
+            }
+            else
+            {
+                recordButton->setPalette(defaultPalette);
+            }
         }
 }

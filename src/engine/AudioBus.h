@@ -61,6 +61,7 @@ public:
 	}
 
         void set_monitoring(bool monitor);
+        bool get_monitoring(){return m_isMonitoring;}
         bool is_input() {return m_type == ChannelIsInput;}
         bool is_output() {return m_type == ChannelIsOutput;}
         bool is_valid() const;
@@ -113,6 +114,7 @@ private:
 signals:
 	void monitoringPeaksStarted();
 	void monitoringPeaksStopped();
+        void monitorChanged(bool monitor);
 	
 };
 
