@@ -1232,9 +1232,14 @@ AudioTrack * Sheet::get_audio_track_for_index(int index)
     return nullptr;
 }
 
-
-// the timer is used to allow 'hopping' to the left from snap position to snap position
-// even during playback.
+/**
+ * Used for rewind but does not work. FIXME.
+ * The timer is used to allow 'hopping' to the left from snap position to snap position
+ * even during playback.
+ * 
+ * @return 
+ *      ied().success() or ied().failure().
+ */
 TCommand* Sheet::prev_skip_pos()
 {
         if (m_snaplist->was_dirty()) {
@@ -1279,6 +1284,12 @@ TCommand* Sheet::prev_skip_pos()
 	return ied().succes();
 }
 
+/**
+ * This is used for FF but does not work. FIXME.
+ * 
+ * @return 
+ *      ied().success() or ied().failure().
+ */
 TCommand* Sheet::next_skip_pos()
 {
         if (m_snaplist->was_dirty()) {
@@ -1286,6 +1297,13 @@ TCommand* Sheet::next_skip_pos()
 	}
 
 	TimeRef p = get_transport_location();
+
+        // FIXME - w/o empty() check it was crashing
+        if(m_xposList.empty())
+        {
+            PERROR("m_xposList.empty");
+            return ied().failure();
+        }
 
 	if (p > m_xposList.last()) {
 		PERROR("pos > last snap position");
