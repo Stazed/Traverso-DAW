@@ -317,13 +317,16 @@ int JackDriver::_jack_sync_callback (jack_transport_state_t state, jack_position
 void JackDriver::update_config()
 {
 	m_isSlave = device->get_driver_property("jackslave", false).toBool();
-		
+
+        // this is slow sync client, so always need _jack_sync_callback
+        jack_set_sync_callback (m_jack_client, _jack_sync_callback, this);
+/*	
 	if (m_isSlave) {
-//                jack_set_sync_callback (m_jack_client, _jack_sync_callback, this);
-            jack_set_sync_callback (m_jack_client,NULL, this);
+                jack_set_sync_callback (m_jack_client, _jack_sync_callback, this);
 	} else {
                 jack_set_sync_callback(m_jack_client, NULL, this);
 	}
+ */
 }
 
 void JackDriver::cleanup_removed_port_channel_pair(PortChannelPair* pcpair)
