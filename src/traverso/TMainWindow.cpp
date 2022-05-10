@@ -1127,7 +1127,7 @@ QMenu* TMainWindow::create_context_menu(QObject* item, QList<TFunction* >* menul
 	foreach(const QString &key, keys) {
 		QList<TFunction*>* list = submenus.value(key);
 
-		qSort(list->begin(), list->end(), TFunction::smaller);
+		std::sort(list->begin(), list->end(), TFunction::smaller);
 
 		QMenu* subMenu = new QMenu(this);
 		subMenu->setFont(themer()->get_font("ContextMenu:fontscale:actions"));

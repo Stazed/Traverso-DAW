@@ -454,7 +454,7 @@ void AudioTrack::private_remove_clip(AudioClip* clip)
 void AudioTrack::private_audioclip_added(AudioClip *clip)
 {
     m_audioClips.append(clip);
-    qSort(m_audioClips.begin(), m_audioClips.end(), AudioClip::isLeftMostClip);
+    std::sort(m_audioClips.begin(), m_audioClips.end(), AudioClip::isLeftMostClip);
     emit audioClipAdded(clip);
 }
 
@@ -466,7 +466,7 @@ void AudioTrack::private_audioclip_removed(AudioClip* clip)
 
 void AudioTrack::clip_position_changed(AudioClip * clip)
 {
-    qSort(m_audioClips.begin(), m_audioClips.end(), AudioClip::isLeftMostClip);
+    std::sort(m_audioClips.begin(), m_audioClips.end(), AudioClip::isLeftMostClip);
 
     if (m_sheet && m_sheet->is_transport_rolling()) {
         THREAD_SAVE_INVOKE(this, clip, private_clip_position_changed(AudioClip*));

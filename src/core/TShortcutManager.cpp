@@ -309,7 +309,7 @@ QList< TFunction* > TShortcutManager::getFunctionsFor(QString className)
 		}
 	}
 
-	qSort(functionsList.begin(), functionsList.end(), TFunction::smaller);
+	std::sort(functionsList.begin(), functionsList.end(), TFunction::smaller);
     return functionsList;
 }
 

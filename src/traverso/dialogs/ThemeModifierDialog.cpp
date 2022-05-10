@@ -41,7 +41,7 @@ ThemeModifierDialog::ThemeModifierDialog(QWidget* parent)
                                   QColorDialog::DontUseNativeDialog);
 
         QList<QString> colors = themer()->get_colors();
-        qSort(colors.begin(), colors.end());
+        std::sort(colors.begin(), colors.end());
 
         foreach(const QString& color, colors) {
                 listWidget->addItem(color);

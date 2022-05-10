@@ -192,7 +192,7 @@ void TimeLine::marker_position_changed()
 
 void TimeLine::index_markers()
 {
-	qSort(m_markers.begin(), m_markers.end(), smallerMarker);
+	std::sort(m_markers.begin(), m_markers.end(), smallerMarker);
 	// let the markers know about their position (index)
 	for (int i = 0; i < m_markers.size(); i++) {
 		m_markers.at(i)->set_index(i+1);
