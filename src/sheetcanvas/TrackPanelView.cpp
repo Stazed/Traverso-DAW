@@ -364,7 +364,7 @@ void TrackPanelGain::paint( QPainter * painter, const QStyleOptionGraphicsItem *
 
         QColor color = themer()->get_color("TrackPanel:slider:background");
         if (has_active_context()) {
-                color = color.light(110);
+                color = color.lighter(110);
         }
 
 
@@ -396,7 +396,7 @@ void TrackPanelGain::paint( QPainter * painter, const QStyleOptionGraphicsItem *
 
         color = QColor(cr,0,cb);
         if (has_active_context()) {
-		color = color.light(140);
+		color = color.lighter(140);
 	}
 
         painter->fillRect(31, 1, sliderdbx, height-1, m_gradient2D);
@@ -467,7 +467,7 @@ void TrackPanelLed::paint(QPainter* painter, const QStyleOptionGraphicsItem * /*
 		QColor background = themer()->get_color("TrackPanel:led:inactive");
 		QColor color = themer()->get_color("TrackPanel:" + m_name + "led");
                 if (has_active_context()) {
-			color = color.light(110);
+			color = color.lighter(110);
 		}
 		
 		painter->setPen(color);
@@ -481,7 +481,7 @@ void TrackPanelLed::paint(QPainter* painter, const QStyleOptionGraphicsItem * /*
 	} else {
 		QColor color = themer()->get_color("TrackPanel:led:inactive");
                 if (has_active_context()) {
-			color = color.light(110);
+			color = color.lighter(110);
 		}
 		
 		painter->setPen(themer()->get_color("TrackPanel:led:margin:inactive"));

@@ -341,7 +341,7 @@ void VUMeterRuler::paintEvent( QPaintEvent*  )
 		}
 
 		deltaY = (int) ( VUMeter::vumeter_lut()->at(idx)/115.0  * levelRange );
-		spm.sprintf("%2i", presetMark[j]);
+		spm.asprintf("%2i", presetMark[j]);
 
 		markRect.setY(height() - deltaY - m_fontLabelAscent/2 - 1);
 		markRect.setHeight(m_fontLabelAscent);

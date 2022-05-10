@@ -123,7 +123,7 @@ void NewProjectDialog::accept( )
 		switch (QMessageBox::information(this,
 			tr("Traverso - Question"),
 			   tr("The Project \"%1\" already exists, do you want to remove it and replace it with a new one ?").arg(title),
-			      tr("Yes"), tr("No"), QString::null, 1, -1)) 
+			      tr("Yes"), tr("No"), QString(), 1, -1)) 
 		{
 			case 0:
 				pm().remove_project(title);

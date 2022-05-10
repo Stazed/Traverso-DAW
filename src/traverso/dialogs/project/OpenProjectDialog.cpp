@@ -220,7 +220,7 @@ void OpenProjectDialog::on_deleteProjectbutton_clicked( )
 	switch (QMessageBox::information(this,
 		tr("Traverso - Question"),
 		   tr("Are you sure that you want to remove the project %1 ? It's not possible to undo it !").arg(title).toLatin1().data(),
-		      "Yes", "No", QString::null, 1, -1)) {
+		      "Yes", "No", QString(), 1, -1)) {
 			      case 0:
 				      pm().remove_project(title);
 				      update_projects_list();

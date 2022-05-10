@@ -200,7 +200,7 @@ void SpectralMeterView::update_background()
 		painter.drawLine(QPointF(m_rect.x(), f), QPointF(m_rect.right(), f));
 
 		painter.setPen(m_penFont);
-		spm.sprintf("%2.0f", i);
+		spm.asprintf("%2.0f", i);
 		painter.drawText(m_rect.right() + 1, (int)f + fm.ascent()/2, spm);
 	}
 
@@ -220,7 +220,7 @@ void SpectralMeterView::update_background()
 			continue;
 		}
 
-		spm.sprintf("%2.0f", m_freq_labels.at(i));
+		spm.asprintf("%2.0f", m_freq_labels.at(i));
 		float s = (float)fm.width(spm)/2.0f;
 
 
@@ -571,7 +571,7 @@ TCommand* SpectralMeterView::export_average_curve()
 	if (format == formatA) {
 		// export the data in text format
 		for (int i = 0; i < s; ++i) {
-			out << str.sprintf("%.6f %.6f\n", m_map_idx2freq.at(i), m_avg_db.at(i));
+			out << str.asprintf("%.6f %.6f\n", m_map_idx2freq.at(i), m_avg_db.at(i));
 		}
 
 		return 0;
@@ -984,7 +984,7 @@ QString SpectralMeterView::get_xmgr_string()
 	QString str;
 
 	for (int i = 0; i < n; ++i) {
-		s += str.sprintf("%.6f %.6f\n", m_map_idx2freq.at(i), m_avg_db.at(i));
+		s += str.asprintf("%.6f %.6f\n", m_map_idx2freq.at(i), m_avg_db.at(i));
 	}
 
 	s += "&\n";

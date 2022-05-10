@@ -271,9 +271,9 @@ void Themer::load( )
 		if (coloradjust != 100) {
 			int adjust = coloradjust - 100;
 			if (adjust < 0) {
-				color = color.dark(-1 * adjust + 100);
+				color = color.darker(-1 * adjust + 100);
 			} else {
-				color = color.light(adjust + 100);
+				color = color.lighter(adjust + 100);
 			}
 		}
 		m_colors.insert(name, color);
@@ -303,9 +303,9 @@ void Themer::load( )
 			if (coloradjust != 100) {
 				int adjust = coloradjust - 100;	
 				if (adjust < 0) {
-					color = color.dark(-1 * adjust + 100);
+					color = color.darker(-1 * adjust + 100);
 				} else {
-					color = color.light(adjust + 100);
+					color = color.lighter(adjust + 100);
 				}
 			}
 

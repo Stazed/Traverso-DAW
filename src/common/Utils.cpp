@@ -137,7 +137,7 @@ QString timeref_to_hms(const TimeRef& ref)
 	mins = (int) (remainder / ( ONE_MINUTE_UNIVERSAL_SAMPLE_RATE ));
 	remainder -= mins * ONE_MINUTE_UNIVERSAL_SAMPLE_RATE;
 	secs = (int) (remainder / UNIVERSAL_SAMPLE_RATE);
-	return QString().sprintf("%02d:%02d:%02d", hours, mins, secs);
+	return QString().asprintf("%02d:%02d:%02d", hours, mins, secs);
 }
 
 QString timeref_to_ms(const TimeRef& ref)
@@ -150,7 +150,7 @@ QString timeref_to_ms(const TimeRef& ref)
 	mins = (int) (universalframe / ( ONE_MINUTE_UNIVERSAL_SAMPLE_RATE ));
 	remainder = (long unsigned int) (universalframe - (mins * ONE_MINUTE_UNIVERSAL_SAMPLE_RATE));
 	secs = (int) (remainder / UNIVERSAL_SAMPLE_RATE);
-	return QString().sprintf("%02d:%02d", mins, secs);
+	return QString().asprintf("%02d:%02d", mins, secs);
 }
 
 // TimeRef to MM:SS.99 (hundredths)
@@ -167,7 +167,7 @@ QString timeref_to_ms_2 (const TimeRef& ref)
 	secs = remainder / UNIVERSAL_SAMPLE_RATE;
 	remainder -= secs * UNIVERSAL_SAMPLE_RATE;
 	frames = remainder * 100 / UNIVERSAL_SAMPLE_RATE;
-	spos.sprintf ( " %02d:%02d%c%02d", mins, secs, QLocale::system().decimalPoint().toLatin1(), frames );
+	spos.asprintf ( " %02d:%02d%c%02d", mins, secs, QLocale::system().decimalPoint().toLatin1(), frames );
 
 	return spos;
 }
@@ -186,7 +186,7 @@ QString timeref_to_ms_3(const TimeRef& ref)
 	secs = remainder / UNIVERSAL_SAMPLE_RATE;
 	remainder -= secs * UNIVERSAL_SAMPLE_RATE;
 	frames = remainder * 1000 / UNIVERSAL_SAMPLE_RATE;
-	spos.sprintf ( " %02d:%02d%c%03d", mins, secs, QLocale::system().decimalPoint().toLatin1(), frames );
+	spos.asprintf ( " %02d:%02d%c%03d", mins, secs, QLocale::system().decimalPoint().toLatin1(), frames );
 
 	return spos;
 }
@@ -205,7 +205,7 @@ QString timeref_to_cd (const TimeRef& ref)
 	secs = remainder / UNIVERSAL_SAMPLE_RATE;
 	remainder -= secs * UNIVERSAL_SAMPLE_RATE;
 	frames = remainder * 75 / UNIVERSAL_SAMPLE_RATE;
-	spos.sprintf ( " %02d:%02d:%02d", mins, secs, frames );
+	spos.asprintf ( " %02d:%02d:%02d", mins, secs, frames );
 
 	return spos;
 }
@@ -226,7 +226,7 @@ QString timeref_to_cd_including_hours (const TimeRef& ref)
 	secs = (int) (remainder / UNIVERSAL_SAMPLE_RATE);
 	remainder -= secs * UNIVERSAL_SAMPLE_RATE;
 	frames = remainder * 75 / UNIVERSAL_SAMPLE_RATE;
-	spos.sprintf("%02d:%02d:%02d,%02d", hours, mins, secs, frames );
+	spos.asprintf("%02d:%02d:%02d,%02d", hours, mins, secs, frames );
 
 	return spos;
 }
@@ -281,7 +281,7 @@ bool t_KeyStringToKeyValue(int &variable, const QString &text)
 	variable = 0;
 	QString s;
 	int x  = 0;
-	if ((text != QString::null) && (text.length() > 0) ) {
+	if ((text != QString()) && (text.length() > 0) ) {
 		s="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		x = s.indexOf(text);
 		if (x>=0) {
@@ -316,7 +316,7 @@ bool t_KeyStringToKeyValue(int &variable, const QString &text)
 						} else if (text == "MOUSEBUTTONRIGHT") {
 							variable = Qt::RightButton;
 						} else if (text == "MOUSEBUTTONMIDDLE") {
-							variable = Qt::MidButton;
+							variable = Qt::MiddleButton;
 						} else if (text == "MOUSEBUTTONX1") {
 							variable = Qt::XButton1;
 						} else if (text == "MOUSEBUTTONX2") {
