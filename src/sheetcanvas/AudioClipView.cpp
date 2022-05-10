@@ -390,7 +390,7 @@ void AudioClipView::draw_peaks(QPainter* p, qreal xstart, int pixelcount)
             }
 
             ytrans = height * chan;
-            p->setMatrix(matrix().translate(xstart, ytrans), true);
+            p->setTransform(transform().translate(xstart, ytrans), true);
             p->drawLine(0, 0, pixelcount, 0);
             p->restore();
         }
@@ -411,7 +411,7 @@ void AudioClipView::draw_peaks(QPainter* p, qreal xstart, int pixelcount)
                 ytrans = (height / 2) + (chan * height);
             }
 
-            p->setMatrix(matrix().translate(xstart, ytrans), true);
+            p->setTransform(transform().translate(xstart, ytrans), true);
 
             if (m_clip->is_selected()) {
                 p->setPen(themer()->get_color("AudioClip:channelseperator:selected"));
@@ -470,7 +470,7 @@ void AudioClipView::draw_peaks(QPainter* p, qreal xstart, int pixelcount)
                     ytrans = (height / 2) + (chan * height);
                 }
 
-                p->setMatrix(matrix().translate(xstart, ytrans), true);
+                p->setTransform(transform().translate(xstart, ytrans), true);
 
                 m_polygon.clear();
                 m_polygon.reserve(pixelcount*2);
@@ -504,7 +504,7 @@ void AudioClipView::draw_peaks(QPainter* p, qreal xstart, int pixelcount)
                     scaleFactor *= channels;
                 }
 
-                p->setMatrix(matrix().translate(xstart, ytrans), true);
+                p->setTransform(transform().translate(xstart, ytrans), true);
 
                 m_polygon.clear();
                 m_polygon.reserve(pixelcount + 2);
@@ -558,7 +558,7 @@ void AudioClipView::draw_db_lines(QPainter* p, qreal xstart, int pixelcount)
     if (m_classicView || microView) { // classicView = non-rectified
 
         // translate the painter to set the first channel center line to 0
-        p->setMatrix(matrix().translate(0, height / 2), true);
+        p->setTransform(transform().translate(0, height / 2), true);
 
         // determine the distance of the db line from the center line
         int zeroDb = 0.9 * height / 2;
@@ -580,12 +580,12 @@ void AudioClipView::draw_db_lines(QPainter* p, qreal xstart, int pixelcount)
             }
 
 
-            p->setMatrix(matrix().translate(0, height), true);
+            p->setTransform(transform().translate(0, height), true);
         }
     } else {  // rectified
 
         // translate the painter to set the first channel base line to 0
-        p->setMatrix(matrix().translate(0, height), true);
+        p->setTransform(transform().translate(0, height), true);
 
         // determine the distance of the db line from the center line
         int zeroDb = 0.95 * height;
@@ -602,7 +602,7 @@ void AudioClipView::draw_db_lines(QPainter* p, qreal xstart, int pixelcount)
                 p->drawText(0.0, -msixDb + m_lineVOffset, " -6 dB");
             }
 
-            p->setMatrix(matrix().translate(0, height), true);
+            p->setTransform(transform().translate(0, height), true);
         }
     }
 
@@ -803,7 +803,7 @@ void AudioClipView::load_theme_data()
 
     QFont dblfont = themer()->get_font("AudioClip:fontscale:dblines");
     QFontMetrics fm(dblfont);
-    m_lineOffset = fm.width(" -6 dB ");
+    m_lineOffset = fm.horizontalAdvance(" -6 dB ");
     m_lineVOffset = fm.ascent()/2;
 
     create_brushes();
