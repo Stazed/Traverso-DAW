@@ -50,8 +50,8 @@ void PluginSlider::paintEvent(QPaintEvent *)
 	QColor background = themer()->get_color("PluginSlider:background");
 	
 	if (highlight) {
-		color = color.light(110);
-		background = background.light(105);
+		color = color.lighter(110);
+		background = background.lighter(105);
 	}
 	
 	// avoid painting at 0, it looks bad...

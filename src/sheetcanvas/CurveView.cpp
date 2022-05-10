@@ -359,7 +359,7 @@ void CurveView::update_blink_color()
 
     QColor blinkColor = themer()->get_color("CurveNode:blink");
 
-    m_blinkingNode->set_color(blinkColor.light(m_blinkDarkness));
+    m_blinkingNode->set_color(blinkColor.lighter(m_blinkDarkness));
 
     m_blinkingNode->update();
 }

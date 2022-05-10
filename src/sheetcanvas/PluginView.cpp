@@ -59,7 +59,7 @@ PluginView::PluginView(PluginChainView* parent, PluginChain* chain, Plugin* plug
 	m_name = plugin->get_name();
 	
 	QFontMetrics fm(themer()->get_font("Plugin:fontscale:name"));
-	m_textwidth = fm.width(m_name);
+	m_textwidth = fm.horizontalAdvance(m_name);
         
         // Limit text display to max width and use ... if wider than max
         m_name = fm.elidedText(m_name, Qt::ElideRight, PLUGIN_WIDTH_MAX);
@@ -91,7 +91,7 @@ void PluginView::paint(QPainter* painter, const QStyleOptionGraphicsItem *option
 	}
 
     if (has_active_context()) {
-        color = color.light(120);
+        color = color.lighter(120);
     }
 
     painter->save();
