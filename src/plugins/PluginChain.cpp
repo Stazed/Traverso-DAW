@@ -220,7 +220,7 @@ void PluginChain::private_plugin_order_changed( Plugin * plugin )
     }
     
     // do the swap
-    m_plugins.swap(first, second);
+    m_plugins.swapItemsAt(first, second);
 
     // We allow the plugin to be moved from pre to post fader and visa versa
     if(m_plugins.indexOf(m_fader) > m_plugins.indexOf(plugin))
