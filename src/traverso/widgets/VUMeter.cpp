@@ -257,8 +257,8 @@ VUMeterRuler::VUMeterRuler(QWidget* parent)
 	setAutoFillBackground(false);
 
 	QFontMetrics fm(themer()->get_font("VUMeter:fontscale:label"));
-	setMinimumWidth(fm.width("-XX")+TICK_LINE_LENGTH + 3);
-	setMaximumWidth(fm.width("-XX")+TICK_LINE_LENGTH + 4);
+	setMinimumWidth(fm.horizontalAdvance("-XX")+TICK_LINE_LENGTH + 3);
+	setMaximumWidth(fm.horizontalAdvance("-XX")+TICK_LINE_LENGTH + 4);
 
 	// labels
 	presetMark.push_back(6);
@@ -357,8 +357,8 @@ void VUMeterRuler::load_theme_data()
 {
 	m_font = themer()->get_font("VUMeter:fontscale:label");
 	QFontMetrics fm(m_font);
-	setMinimumWidth(fm.width("-XX")+TICK_LINE_LENGTH + 3);
-	setMaximumWidth(fm.width("-XX")+TICK_LINE_LENGTH + 4);
+	setMinimumWidth(fm.horizontalAdvance("-XX")+TICK_LINE_LENGTH + 3);
+	setMaximumWidth(fm.horizontalAdvance("-XX")+TICK_LINE_LENGTH + 4);
 	m_fontLabelAscent = fm.ascent();
 
 	m_colorActive = themer()->get_color("VUMeter:font:active");

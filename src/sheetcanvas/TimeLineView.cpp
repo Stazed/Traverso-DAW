@@ -159,7 +159,7 @@ void TimeLineView::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 	TimeRef lastLocation = TimeRef(xstart * m_sv->timeref_scalefactor + pixelcount * m_sv->timeref_scalefactor);
 	int xstartoffset = m_sv->hscrollbar_value();
 	
-	painter->setMatrixEnabled(false);
+	painter->setWorldMatrixEnabled(false);
 
     qint64 count = TimeRef((lastLocation-firstLocation+major) / minor).universal_frame();
 

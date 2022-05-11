@@ -77,7 +77,7 @@ SpectralMeterView::SpectralMeterView(SpectralMeterWidget* widget)
 
 	QFontMetrics fm(themer()->get_font("FFTMeter:fontscale:label"));
 	margin_l = 5;
-	margin_r = fm.width("-XX") + 5;
+	margin_r = fm.horizontalAdvance("-XX") + 5;
 	margin_t = fm.ascent()/2 + 5;
 	margin_b = fm.ascent() + fm.descent() + 10;
 	
@@ -221,7 +221,7 @@ void SpectralMeterView::update_background()
 		}
 
 		spm.asprintf("%2.0f", m_freq_labels.at(i));
-		float s = (float)fm.width(spm)/2.0f;
+		float s = (float)fm.horizontalAdvance(spm)/2.0f;
 
 
 		// draw text only if there is enough space for it
